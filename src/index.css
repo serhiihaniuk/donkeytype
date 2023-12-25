@@ -1,0 +1,72 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+.container {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.text {
+  font-size: 24px;
+  line-height: 1.6;
+}
+
+.text span {
+  transition: color 0.3s ease;
+}
+
+.textarea {
+  width: 80%;
+  height: 100px;
+  margin: 20px auto;
+  padding: 10px;
+  font-size: 18px;
+}
+
+.errorCount {
+  font-size: 18px;
+}
+.active-word{
+  border-bottom: 1px solid yellow;
+}
+
+.word{
+  margin: 2px;
+}
+.words {
+  color: grey;
+}
+.correct-char{
+  color: white;
+}
+.error-char{
+  color: red;
+}
+.caret{
+  position: absolute;
+  width: 1px;
+  height: 15px;
+  background-color: white;
+  transition: left 0.3s ease;
+}
