@@ -1,10 +1,10 @@
 import React from 'react';
-import OneWord from './components/OneWord';
+
+import NewTry from './components/TypeBox';
 
 const App: React.FC = () => {
   return (
-    // <TypeBox/>
-    <OneWord></OneWord>
+    <NewTry/>
   )
 };
 
