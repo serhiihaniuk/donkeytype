@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react'
 
-export default function NewTry() {
+export default function TypeBox() {
   const [wordsDict, setWordsDict] = useState([
     {
       original: 'sample',
@@ -16,15 +16,11 @@ export default function NewTry() {
     return wordsDict.map((e) => e.val);
   }, [wordsDict]);
 
-  const wordsKey = useMemo(() => {
-    return wordsDict.map((e) => e.key);
-  }, [wordsDict]);
-
   const wordSpanRefs = useMemo(
     () =>
       Array(words.length)
         .fill(0)
-        .map((i) => React.createRef()),
+        .map((i) => ({error: false, ref: React.createRef()})),
     [words]
   );
 
@@ -35,13 +31,12 @@ export default function NewTry() {
   const [currWordIndex, setCurrWordIndex] = useState(0);
   const [currCharIndex, setCurrCharIndex] = useState(-1);
   
-  const [prevInput, setPrevInput] = useState("");
-  
   const [history, setHistory] = useState({});
-  const keyString = currWordIndex + "." + currCharIndex;
+  const keyString = `${currWordIndex}.${currCharIndex}`;
 
   const [currChar, setCurrChar] = useState("");
 
+  const [wordsCorrect, setWordsCorrect] = useState(new Set());
   const [inputWordsHistory, setInputWordsHistory] = useState({});
 
 
@@ -53,16 +48,35 @@ export default function NewTry() {
   };
 
   const handleKeyDown = (e) => {
+    // backspace
     if (e.keyCode === 8) {
-      if(currCharIndex >= 0){
-        setCurrCharIndex(currCharIndex - 1)
+      // jump to previous word if there is an error
+      if(currCharIndex < 0 && wordSpanRefs[currWordIndex - 1].error){
+        e.preventDefault()
+        setCurrWordIndex(currWordIndex - 1)
+        setCurrCharIndex(inputWordsHistory[currWordIndex - 1].length - 1)
+        setCurrInput(inputWordsHistory[currWordIndex - 1])
+        return
       }
-        setCurrChar("");
 
-        delete history[keyString];
-        return;
+      if(currCharIndex < 0){
+        return
+      }
+
+      setCurrCharIndex(currCharIndex - 1)
+      setCurrChar("");
+
+      delete history[keyString];
+      return;
     }
+
+    // spacebar
     if(e.keyCode === 32){
+      // chars skipped
+      if(currCharIndex < words[currWordIndex].length - 1){
+        wordSpanRefs[currWordIndex].error = true
+      }
+
       setCurrInput("");
       setCurrWordIndex(currWordIndex + 1);
       setCurrCharIndex(-1);
@@ -82,18 +96,11 @@ export default function NewTry() {
     if (i > currWordIndex) {
       return null;
     }
-    if (!input) {
-      input = currInput.trim();
-    }
-    if (i > currWordIndex) {
-      return null;
-    }
 
     if (input.length <= word.length) {
       return null;
     } else {
       const extra = input.slice(word.length, input.length).split("");
-      history[i] = extra.length;
       return extra.map((c, idx) => (
         <span key={idx} className='error-char'>
           {c}
@@ -127,25 +134,33 @@ export default function NewTry() {
           history[keyString] = undefined;
         }
       }
-    return 'char'
-  }
-
-  const getWordClassName = (wordIdx) => {
-      if (currWordIndex === wordIdx) {
-          return "word active-word";
-      } else {
-        return "word";
+      if(wordIdx === currWordIndex && charIdx === currCharIndex + 1){
+        return 'current-char'
       }
     
+  }
+
+  
+
+  const getWordClassName = (wordIdx) => {
+    let cls = ['word']
+    if (currWordIndex === wordIdx) {
+      cls.push('active')
+    } 
+    if(wordSpanRefs[wordIdx].error){
+      cls.push('error')
+    }
+    return cls.join(' ')
   };
   
   return (
     <>
       <div className="words">
         {words.map((word, i) => (
+          
           <span
             key={i}
-            ref={wordSpanRefs[i]}
+            ref={wordSpanRefs[i].ref}
             className={getWordClassName(i)}
           >
             {word.split("").map((char, idx) => (
@@ -158,7 +173,8 @@ export default function NewTry() {
             ))}
             {getExtraCharsDisplay(word, i)}
           </span>
-        ))}
+        )
+      )}
       </div>
       <input
         key="hidden-input"

@@ -47,7 +47,7 @@ h1 {
 .errorCount {
   font-size: 18px;
 }
-.active-word{
+.active{
   border-bottom: 1px solid yellow;
 }
 
@@ -57,11 +57,18 @@ h1 {
 .words {
   color: grey;
 }
+.current-char{
+  border-left: 2px solid white;
+}
 .correct-char{
   color: white;
 }
 .error-char{
   color: red;
+}
+
+.error{
+  border-bottom: 1.5px solid red;
 }
 .caret{
   position: absolute;
