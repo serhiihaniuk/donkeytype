@@ -60,6 +60,9 @@ h1 {
 .current-char{
   border-left: 2px solid white;
 }
+.current-char-caret-right{
+  border-right: 2px solid white;
+}
 .correct-char{
   color: white;
 }

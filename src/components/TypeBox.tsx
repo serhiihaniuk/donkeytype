@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 export default function TypeBox() {
   const [wordsDict, setWordsDict] = useState([
@@ -9,6 +9,10 @@ export default function TypeBox() {
     {
       original: 'test',
       val: 'test'
+    },
+    {
+      original: 'consider',
+      val: 'consider'
     }
   ]);
 
@@ -27,18 +31,39 @@ export default function TypeBox() {
   const inputRef = useRef(null)
   const [currInput, setCurrInput] = useState("");
 
-  
   const [currWordIndex, setCurrWordIndex] = useState(0);
   const [currCharIndex, setCurrCharIndex] = useState(-1);
   
-  const [history, setHistory] = useState({});
-  const keyString = `${currWordIndex}.${currCharIndex}`;
+  const generateObject = () => {
+    let result = {};
+    for (let i = 0; i < words.length; i++) {
+      result[i] = {};
+    }
+    return result;
+  }
+
+  const [history, setHistory] = useState(generateObject);
 
   const [currChar, setCurrChar] = useState("");
 
-  const [wordsCorrect, setWordsCorrect] = useState(new Set());
   const [inputWordsHistory, setInputWordsHistory] = useState({});
 
+  useEffect(() => {  
+    checkCorrect()
+  },[currWordIndex])
+
+  const checkCorrect = () => {
+    for (const wordIdx in history){
+      if(Object.values(history[wordIdx]).some(value => 
+        value === false || 
+        value === undefined) ||
+        inputWordsHistory[wordIdx]?.length > words[wordIdx].length){
+        wordSpanRefs[wordIdx].error = true;
+      } else {
+        wordSpanRefs[wordIdx].error = false;
+      }
+    }
+  }
 
   const updateInput = (e) => {
     setCurrInput(e.target.value);
@@ -66,17 +91,12 @@ export default function TypeBox() {
       setCurrCharIndex(currCharIndex - 1)
       setCurrChar("");
 
-      delete history[keyString];
+      delete history[currWordIndex][currCharIndex];
       return;
     }
 
     // spacebar
     if(e.keyCode === 32){
-      // chars skipped
-      if(currCharIndex < words[currWordIndex].length - 1){
-        wordSpanRefs[currWordIndex].error = true
-      }
-
       setCurrInput("");
       setCurrWordIndex(currWordIndex + 1);
       setCurrCharIndex(-1);
@@ -110,12 +130,11 @@ export default function TypeBox() {
   };
 
   const getCharClassName = (wordIdx, charIdx, char, word) => {
-    const keyString = wordIdx + "." + charIdx;
 
-    if (history[keyString] === true) {
+    if (history[wordIdx][charIdx] === true) {
       return "correct-char";
     }
-    if (history[keyString] === false) {
+    if (history[wordIdx][charIdx] === false) {
       return "error-char"
     }
     if (
@@ -123,31 +142,35 @@ export default function TypeBox() {
       charIdx === currCharIndex &&
       currChar){
         if (char === currChar) {
-          history[keyString] = true;
+          history[wordIdx][charIdx] = true;
           return "correct-char";
         } else {
-          history[keyString] = false;
+          history[wordIdx][charIdx] = false;
           return "error-char";
         }
       } else {
         if (wordIdx < currWordIndex) {
-          history[keyString] = undefined;
+          history[wordIdx][charIdx] = undefined;
         }
       }
-      if(wordIdx === currWordIndex && charIdx === currCharIndex + 1){
-        return 'current-char'
+      if(wordIdx === currWordIndex){
+        if(charIdx === currCharIndex + 1){
+          return 'current-char'        }
+        if(currCharIndex === word.length - 1){
+          return 'current-char-caret-right'
+        }
+
       }
+
     
   }
-
-  
 
   const getWordClassName = (wordIdx) => {
     let cls = ['word']
     if (currWordIndex === wordIdx) {
       cls.push('active')
     } 
-    if(wordSpanRefs[wordIdx].error){
+    if(wordSpanRefs[wordIdx].error === true){
       cls.push('error')
     }
     return cls.join(' ')
