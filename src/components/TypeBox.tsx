@@ -107,34 +107,20 @@ export default function TypeBox() {
     setCurrChar(e.key);
   }
 
-  const getExtraCharsDisplay = (word, i) => {
-    let input = inputWordsHistory[i];
-
-    if (!input) {
-      input = currInput.trim();
-    }
-    if (i > currWordIndex) {
-      return null;
-    }
-
-    if (input.length <= word.length) {
-      return null;
-    } else {
-      const extra = input.slice(word.length, input.length).split("");
-      return extra.map((c, idx) => (
-        <span key={idx} className='error-char'>
-          {c}
-        </span>
-      ));
-    }
-  };
-
+ 
   const getCharClassName = (wordIdx, charIdx, char, word) => {
 
     if (history[wordIdx][charIdx] === true) {
+      if(wordIdx === currWordIndex && charIdx === word.length - 1 && charIdx === currCharIndex){
+        return "correct-char caret-right"
+      }
       return "correct-char";
     }
     if (history[wordIdx][charIdx] === false) {
+      if(wordIdx === currWordIndex && charIdx === word.length - 1 && charIdx === currCharIndex){
+        console.log(charIdx)
+        return "error-char caret-right"
+      }
       return "error-char"
     }
     if (
@@ -155,14 +141,10 @@ export default function TypeBox() {
       }
       if(wordIdx === currWordIndex){
         if(charIdx === currCharIndex + 1){
-          return 'current-char'        }
-        if(currCharIndex === word.length - 1){
-          return 'current-char-caret-right'
+        
+          return 'current-char'        
         }
-
       }
-
-    
   }
 
   const getWordClassName = (wordIdx) => {
@@ -175,7 +157,28 @@ export default function TypeBox() {
     }
     return cls.join(' ')
   };
-  
+
+  const getExtraCharsDisplay = (word, i) => {
+    let input = inputWordsHistory[i] || currInput.trim();
+
+    if (i > currWordIndex) {
+      return null;
+    }
+
+    if (input.length <= word.length) {
+      return null;
+    } else {
+      const extra = input.slice(word.length, input.length).split("");
+      return extra.map((c, idx) => {
+        const isLastChar = idx === extra.length - 1 && i === currWordIndex;
+        return (
+        <span key={idx} className={isLastChar ? 'error-char caret-right' : 'error-char'}>
+          {c}
+        </span>
+      )})
+    }
+  };
+
   return (
     <>
       <div className="words">
