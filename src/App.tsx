@@ -1,10 +1,10 @@
 import React from 'react';
+import Home from './pages/Home';
 
-import NewTry from './components/TypeBox';
 
 const App: React.FC = () => {
   return (
-    <NewTry/>
+    <Home/>
   )
 };
 

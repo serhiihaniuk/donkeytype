@@ -12,7 +12,6 @@
 body {
   margin: 0;
   display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -47,16 +46,14 @@ h1 {
 .errorCount {
   font-size: 18px;
 }
-.active{
+/* .active{
   border-bottom: 1px solid yellow;
-}
+} */
 
 .word{
   margin: 2px;
 }
-.words {
-  color: grey;
-}
+
 .current-char{
   border-left: 2px solid white;
 }
@@ -73,10 +70,4 @@ h1 {
 .error{
   border-bottom: 1.5px solid red;
 }
-.caret{
-  position: absolute;
-  width: 1px;
-  height: 15px;
-  background-color: white;
-  transition: left 0.3s ease;
-}
+

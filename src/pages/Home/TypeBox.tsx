@@ -1,23 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+import {words as wordsData} from '../../data/words'
+import styles from './TypeBox.module.css'
 
 export default function TypeBox() {
-  const [wordsDict, setWordsDict] = useState([
-    {
-      original: 'sample',
-      val: 'sample'
-    },
-    {
-      original: 'test',
-      val: 'test'
-    },
-    {
-      original: 'consider',
-      val: 'consider'
-    }
-  ]);
+  const [wordsDict, setWordsDict] = useState(wordsData);
 
   const words = useMemo(() => {
-    return wordsDict.map((e) => e.val);
+    return wordsData.map((e) => e.val);
   }, [wordsDict]);
 
   const wordSpanRefs = useMemo(
@@ -35,10 +24,10 @@ export default function TypeBox() {
   const [currCharIndex, setCurrCharIndex] = useState(-1);
   
   const generateObject = () => {
-    let result = {};
-    for (let i = 0; i < words.length; i++) {
+    const result = {};
+    words.forEach((item, i)=> {
       result[i] = {};
-    }
+    })
     return result;
   }
 
@@ -107,7 +96,6 @@ export default function TypeBox() {
     setCurrChar(e.key);
   }
 
- 
   const getCharClassName = (wordIdx, charIdx, char, word) => {
 
     if (history[wordIdx][charIdx] === true) {
@@ -181,7 +169,7 @@ export default function TypeBox() {
 
   return (
     <>
-      <div className="words">
+      <div className={styles.words}>
         {words.map((word, i) => (
           
           <span
@@ -206,7 +194,7 @@ export default function TypeBox() {
         key="hidden-input"
         ref={inputRef}
         type="text"
-        className="hidden-input"
+        className={styles.hiddenInput}
         onKeyDown={(e) => handleKeyDown(e)}
         value={currInput}
         onChange={(e) => updateInput(e)}
