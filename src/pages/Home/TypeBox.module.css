@@ -1,3 +1,23 @@
+.container{
+  position: relative;
+}
 .words {
-  color: grey;
+  color: #446ad5;
+  max-width: 1000px;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  cursor: default;
+}
+.blurred{
+  filter: blur(4px);
+  opacity: .25;
+  z-index: 1;
+}
+.startSign{
+  position: absolute;
+  top: 10px;
+  left: 100px;
+  color: white;
+  pointer-events: none;
 }

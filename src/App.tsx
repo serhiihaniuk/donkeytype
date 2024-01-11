@@ -3,8 +3,10 @@ import Home from './pages/Home';
 
 
 const App: React.FC = () => {
-  return (
+  return (<>
     <Home/>
+  
+  </>
   )
 };
 

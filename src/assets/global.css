@@ -2,8 +2,8 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: white;
+  background-color: #241963;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -14,11 +14,8 @@ body {
   display: flex;
   min-width: 320px;
   min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  flex-direction: column;
+  align-items: center;
 }
 
 .container {
@@ -26,32 +23,12 @@ h1 {
   margin-top: 50px;
 }
 
-.text {
-  font-size: 24px;
-  line-height: 1.6;
-}
-
-.text span {
-  transition: color 0.3s ease;
-}
-
-.textarea {
-  width: 80%;
-  height: 100px;
-  margin: 20px auto;
-  padding: 10px;
-  font-size: 18px;
-}
-
 .errorCount {
   font-size: 18px;
 }
-/* .active{
-  border-bottom: 1px solid yellow;
-} */
 
 .word{
-  margin: 2px;
+  margin: 4px;
 }
 
 .current-char{
@@ -64,10 +41,10 @@ h1 {
   color: white;
 }
 .error-char{
-  color: red;
+  color: #c6915e;
 }
 
 .error{
-  border-bottom: 1.5px solid red;
+  border-bottom: 1.5px solid #c6915e;
 }
 

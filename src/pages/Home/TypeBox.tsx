@@ -19,6 +19,7 @@ export default function TypeBox() {
 
   const inputRef = useRef(null)
   const [currInput, setCurrInput] = useState("");
+  const [isFocused, setIsFocused] = useState(false)
 
   const [currWordIndex, setCurrWordIndex] = useState(0);
   const [currCharIndex, setCurrCharIndex] = useState(-1);
@@ -36,6 +37,10 @@ export default function TypeBox() {
   const [currChar, setCurrChar] = useState("");
 
   const [inputWordsHistory, setInputWordsHistory] = useState({});
+  
+  useEffect(() => {  
+    inputRef.current.focus()
+  },[])
 
   useEffect(() => {  
     checkCorrect()
@@ -60,6 +65,10 @@ export default function TypeBox() {
     inputWordsHistory[currWordIndex] = e.target.value.trim();
     setInputWordsHistory(inputWordsHistory);
   };
+
+  const handleFocus = (isFocus) => {
+    setIsFocused(isFocus)
+  }
 
   const handleKeyDown = (e) => {
     // backspace
@@ -168,8 +177,15 @@ export default function TypeBox() {
   };
 
   return (
-    <>
-      <div className={styles.words}>
+    <div className={styles.container}>
+      <div 
+      className={styles.words}
+      style={{
+        opacity: isFocused? '1' : '.25',
+        filter: isFocused? '' : 'blur(4px)'
+      }}
+      onClick={() => inputRef.current.focus()}
+      >
         {words.map((word, i) => (
           
           <span
@@ -190,6 +206,7 @@ export default function TypeBox() {
         )
       )}
       </div>
+      {!isFocused && <div className={styles.startSign} >Click here to start typing</div>}
       <input
         key="hidden-input"
         ref={inputRef}
@@ -197,9 +214,11 @@ export default function TypeBox() {
         className={styles.hiddenInput}
         onKeyDown={(e) => handleKeyDown(e)}
         value={currInput}
+        onFocus={() => handleFocus(true)}
+        onBlur={() => handleFocus(false)}
         onChange={(e) => updateInput(e)}
       />
-    </>
+    </div>
     
   )
 }

@@ -25,5 +25,45 @@ export const words = [
   },
   {
     val: 'work'
-  }
+  },
+  {
+    val: 'however'
+  },
+  {
+    val: 'hold'
+  },
+  {
+    val: 'any'
+  },
+  {
+    val: 'around'
+  },
+  {
+    val: 'he'
+  },
+  {
+    val: 'problem'
+  },
+  {
+    val: 'fact'
+  },
+  {
+    val: 'before'
+  },
+  {
+    val: 'another'
+  },
+  {
+    val: 'turn'
+  },
+  {
+    val: 'know'
+  },
+  {
+    val: 'move'
+  },
+  {
+    val: 'of'
+  },
+
 ]
