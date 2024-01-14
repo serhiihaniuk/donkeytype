@@ -34,6 +34,33 @@ export default function TypeBox() {
 
   const [history, setHistory] = useState(generateObject);
 
+  const [timer, setTimer] = useState(0)
+
+  const [liveWPM, setLiveWPM] = useState(0);
+
+  const calculateWPM = (t) => {
+    const chars = document.querySelectorAll('.correct-char').length
+    console.log(chars, timer)
+    const wpm = chars / t * 60 / 5
+    
+    return wpm;
+  };
+
+  useEffect(() => {
+    let t = 0
+    const timeOut = setInterval(() => {
+      setTimer(prevTimer => {
+        const newTimer = prevTimer + 1;
+        const wpm = Math.round(calculateWPM(newTimer));
+        setLiveWPM(wpm);
+        return newTimer;
+      });
+    }, 1000); 
+    if(timer < 0){
+      clearInterval(timeOut)
+    }
+  }, []);
+
   const [currChar, setCurrChar] = useState("");
 
   const [inputWordsHistory, setInputWordsHistory] = useState({});
@@ -218,6 +245,8 @@ export default function TypeBox() {
         onBlur={() => handleFocus(false)}
         onChange={(e) => updateInput(e)}
       />
+       <p>Live WPM: {liveWPM}</p>
+       <p>{15 - timer}</p>
     </div>
     
   )
