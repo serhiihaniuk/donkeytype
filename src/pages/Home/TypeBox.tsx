@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import {words as wordsData} from '../../data/words'
-import styles from './TypeBox.module.css'
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { words as wordsData } from '../../data/words';
+import styles from './TypeBox.module.css';
 
-export default function TypeBox() {
+export default function TypeBox({ setIsFinished }) {
   const [wordsDict, setWordsDict] = useState(wordsData);
 
   const words = useMemo(() => {
@@ -13,78 +13,97 @@ export default function TypeBox() {
     () =>
       Array(words.length)
         .fill(0)
-        .map((i) => ({error: false, ref: React.createRef()})),
+        .map((i) => ({ error: false, ref: React.createRef() })),
     [words]
   );
 
-  const inputRef = useRef(null)
-  const [currInput, setCurrInput] = useState("");
-  const [isFocused, setIsFocused] = useState(false)
+  const inputRef = useRef(null);
+  const [currInput, setCurrInput] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
 
   const [currWordIndex, setCurrWordIndex] = useState(0);
   const [currCharIndex, setCurrCharIndex] = useState(-1);
-  
+
   const generateObject = () => {
     const result = {};
-    words.forEach((item, i)=> {
+    words.forEach((item, i) => {
       result[i] = {};
-    })
+    });
     return result;
-  }
+  };
 
   const [history, setHistory] = useState(generateObject);
 
-  const [timer, setTimer] = useState(0)
+  const [showStats, setShowStats] = useState(false);
+
+  const [timer, setTimer] = useState(0);
 
   const [liveWPM, setLiveWPM] = useState(0);
 
   const calculateWPM = (t) => {
-    const chars = document.querySelectorAll('.correct-char').length
-    console.log(chars, timer)
-    const wpm = chars / t * 60 / 5
-    
+    const chars = document.querySelectorAll('.correct-char').length;
+    const wpm = ((chars / t) * 60) / 5;
+
     return wpm;
   };
+  // useEffect(() => {
+  //   start();
+  // }, []);
 
-  useEffect(() => {
-    let t = 0
+  const start = () => {
+    inputRef.current.focus();
     const timeOut = setInterval(() => {
-      setTimer(prevTimer => {
+      setTimer((prevTimer) => {
         const newTimer = prevTimer + 1;
         const wpm = Math.round(calculateWPM(newTimer));
         setLiveWPM(wpm);
+        
+        if (newTimer > 15) {
+          clearInterval(timeOut);
+          console.log('finito')
+          finish();
+        }
         return newTimer;
       });
-    }, 1000); 
-    if(timer < 0){
-      clearInterval(timeOut)
+    }, 1000);
+    
+    if (timer > 15) {
+      clearInterval(timeOut);
+      console.log('finito')
+      finish();
     }
-  }, []);
+  };
+  const finish = () => {
+    setTimer(0);
+    setIsFinished(true);
+  };
 
-  const [currChar, setCurrChar] = useState("");
+  const [currChar, setCurrChar] = useState('');
 
   const [inputWordsHistory, setInputWordsHistory] = useState({});
-  
-  useEffect(() => {  
-    inputRef.current.focus()
-  },[])
 
-  useEffect(() => {  
-    checkCorrect()
-  },[currWordIndex])
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
+  useEffect(() => {
+    checkCorrect();
+  }, [currWordIndex]);
 
   const checkCorrect = () => {
-    for (const wordIdx in history){
-      if(Object.values(history[wordIdx]).some(value => 
-        value === false || 
-        value === undefined) ||
-        inputWordsHistory[wordIdx]?.length > words[wordIdx].length){
+    for (const wordIdx in history) {
+      if (
+        Object.values(history[wordIdx]).some(
+          (value) => value === false || value === undefined
+        ) ||
+        inputWordsHistory[wordIdx]?.length > words[wordIdx].length
+      ) {
         wordSpanRefs[wordIdx].error = true;
       } else {
         wordSpanRefs[wordIdx].error = false;
       }
     }
-  }
+  };
 
   const updateInput = (e) => {
     setCurrInput(e.target.value);
@@ -94,35 +113,35 @@ export default function TypeBox() {
   };
 
   const handleFocus = (isFocus) => {
-    setIsFocused(isFocus)
-  }
+    setIsFocused(isFocus);
+  };
 
   const handleKeyDown = (e) => {
     // backspace
     if (e.keyCode === 8) {
       // jump to previous word if there is an error
-      if(currCharIndex < 0 && wordSpanRefs[currWordIndex - 1].error){
-        e.preventDefault()
-        setCurrWordIndex(currWordIndex - 1)
-        setCurrCharIndex(inputWordsHistory[currWordIndex - 1].length - 1)
-        setCurrInput(inputWordsHistory[currWordIndex - 1])
-        return
+      if (currCharIndex < 0 && wordSpanRefs[currWordIndex - 1].error) {
+        e.preventDefault();
+        setCurrWordIndex(currWordIndex - 1);
+        setCurrCharIndex(inputWordsHistory[currWordIndex - 1].length - 1);
+        setCurrInput(inputWordsHistory[currWordIndex - 1]);
+        return;
       }
 
-      if(currCharIndex < 0){
-        return
+      if (currCharIndex < 0) {
+        return;
       }
 
-      setCurrCharIndex(currCharIndex - 1)
-      setCurrChar("");
+      setCurrCharIndex(currCharIndex - 1);
+      setCurrChar('');
 
       delete history[currWordIndex][currCharIndex];
       return;
     }
 
     // spacebar
-    if(e.keyCode === 32){
-      setCurrInput("");
+    if (e.keyCode === 32) {
+      setCurrInput('');
       setCurrWordIndex(currWordIndex + 1);
       setCurrCharIndex(-1);
       return;
@@ -130,56 +149,59 @@ export default function TypeBox() {
 
     setCurrCharIndex(currCharIndex + 1);
     setCurrChar(e.key);
-  }
+  };
 
   const getCharClassName = (wordIdx, charIdx, char, word) => {
-
     if (history[wordIdx][charIdx] === true) {
-      if(wordIdx === currWordIndex && charIdx === word.length - 1 && charIdx === currCharIndex){
-        return "correct-char caret-right"
+      if (
+        wordIdx === currWordIndex &&
+        charIdx === word.length - 1 &&
+        charIdx === currCharIndex
+      ) {
+        return 'correct-char caret-right';
       }
-      return "correct-char";
+      return 'correct-char';
     }
     if (history[wordIdx][charIdx] === false) {
-      if(wordIdx === currWordIndex && charIdx === word.length - 1 && charIdx === currCharIndex){
-        console.log(charIdx)
-        return "error-char caret-right"
+      if (
+        wordIdx === currWordIndex &&
+        charIdx === word.length - 1 &&
+        charIdx === currCharIndex
+      ) {
+        console.log(charIdx);
+        return 'error-char caret-right';
       }
-      return "error-char"
+      return 'error-char';
     }
-    if (
-      wordIdx === currWordIndex &&
-      charIdx === currCharIndex &&
-      currChar){
-        if (char === currChar) {
-          history[wordIdx][charIdx] = true;
-          return "correct-char";
-        } else {
-          history[wordIdx][charIdx] = false;
-          return "error-char";
-        }
+    if (wordIdx === currWordIndex && charIdx === currCharIndex && currChar) {
+      if (char === currChar) {
+        history[wordIdx][charIdx] = true;
+        return 'correct-char';
       } else {
-        if (wordIdx < currWordIndex) {
-          history[wordIdx][charIdx] = undefined;
-        }
+        history[wordIdx][charIdx] = false;
+        return 'error-char';
       }
-      if(wordIdx === currWordIndex){
-        if(charIdx === currCharIndex + 1){
-        
-          return 'current-char'        
-        }
+    } else {
+      if (wordIdx < currWordIndex) {
+        history[wordIdx][charIdx] = undefined;
       }
-  }
+    }
+    if (wordIdx === currWordIndex) {
+      if (charIdx === currCharIndex + 1) {
+        return 'current-char';
+      }
+    }
+  };
 
   const getWordClassName = (wordIdx) => {
-    let cls = ['word']
+    let cls = ['word'];
     if (currWordIndex === wordIdx) {
-      cls.push('active')
-    } 
-    if(wordSpanRefs[wordIdx].error === true){
-      cls.push('error')
+      cls.push('active');
     }
-    return cls.join(' ')
+    if (wordSpanRefs[wordIdx].error === true) {
+      cls.push('error');
+    }
+    return cls.join(' ');
   };
 
   const getExtraCharsDisplay = (word, i) => {
@@ -192,37 +214,40 @@ export default function TypeBox() {
     if (input.length <= word.length) {
       return null;
     } else {
-      const extra = input.slice(word.length, input.length).split("");
+      const extra = input.slice(word.length, input.length).split('');
       return extra.map((c, idx) => {
         const isLastChar = idx === extra.length - 1 && i === currWordIndex;
         return (
-        <span key={idx} className={isLastChar ? 'error-char caret-right' : 'error-char'}>
-          {c}
-        </span>
-      )})
+          <span
+            key={idx}
+            className={isLastChar ? 'error-char caret-right' : 'error-char'}
+          >
+            {c}
+          </span>
+        );
+      });
     }
   };
 
   return (
     <div className={styles.container}>
-      <div 
-      className={styles.words}
-      style={{
-        opacity: isFocused? '1' : '.25',
-        filter: isFocused? '' : 'blur(4px)'
-      }}
-      onClick={() => inputRef.current.focus()}
+      <div
+        className={styles.words}
+        style={{
+          opacity: isFocused ? '1' : '.25',
+          filter: isFocused ? '' : 'blur(4px)',
+        }}
+        onClick={() => inputRef.current.focus()}
       >
         {words.map((word, i) => (
-          
           <span
             key={i}
             ref={wordSpanRefs[i].ref}
             className={getWordClassName(i)}
           >
-            {word.split("").map((char, idx) => (
+            {word.split('').map((char, idx) => (
               <span
-                key={"word" + idx}
+                key={'word' + idx}
                 className={getCharClassName(i, idx, char, word)}
               >
                 {char}
@@ -230,10 +255,11 @@ export default function TypeBox() {
             ))}
             {getExtraCharsDisplay(word, i)}
           </span>
-        )
-      )}
+        ))}
       </div>
-      {!isFocused && <div className={styles.startSign} >Click here to start typing</div>}
+      {!isFocused && (
+        <div className={styles.startSign}>Click here to start typing</div>
+      )}
       <input
         key="hidden-input"
         ref={inputRef}
@@ -245,9 +271,9 @@ export default function TypeBox() {
         onBlur={() => handleFocus(false)}
         onChange={(e) => updateInput(e)}
       />
-       <p>Live WPM: {liveWPM}</p>
-       <p>{15 - timer}</p>
+      <button onClick={() => {start()}}>Start</button>
+      <p>Live WPM: {liveWPM}</p>
+      <p>{15 - timer}</p>
     </div>
-    
-  )
+  );
 }
