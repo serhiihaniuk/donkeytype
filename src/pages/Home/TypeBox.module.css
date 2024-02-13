@@ -1,5 +1,6 @@
 .container{
   position: relative;
+  margin-left: 150px;
 }
 .words {
   color: #446ad5;

@@ -1,7 +1,16 @@
-import React from 'react'
+import React from 'react';
 
-export default function Stats({setIsFinished}) {
+export default function Stats({ setIsFinished }) {
   return (
-    <div>Stats</div>
-  )
+    <div>
+      <p>Stats</p>
+      <button
+        onClick={() => {
+          setIsFinished(false);
+        }}
+      >
+        Restart
+      </button>
+    </div>
+  );
 }

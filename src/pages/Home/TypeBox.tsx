@@ -34,8 +34,6 @@ export default function TypeBox({ setIsFinished }) {
 
   const [history, setHistory] = useState(generateObject);
 
-  const [showStats, setShowStats] = useState(false);
-
   const [timer, setTimer] = useState(0);
 
   const [liveWPM, setLiveWPM] = useState(0);
@@ -46,9 +44,6 @@ export default function TypeBox({ setIsFinished }) {
 
     return wpm;
   };
-  // useEffect(() => {
-  //   start();
-  // }, []);
 
   const start = () => {
     inputRef.current.focus();
@@ -57,22 +52,17 @@ export default function TypeBox({ setIsFinished }) {
         const newTimer = prevTimer + 1;
         const wpm = Math.round(calculateWPM(newTimer));
         setLiveWPM(wpm);
-        
+
         if (newTimer > 15) {
           clearInterval(timeOut);
-          console.log('finito')
+          console.log('finito');
           finish();
         }
         return newTimer;
       });
     }, 1000);
-    
-    if (timer > 15) {
-      clearInterval(timeOut);
-      console.log('finito')
-      finish();
-    }
   };
+
   const finish = () => {
     setTimer(0);
     setIsFinished(true);
@@ -107,7 +97,6 @@ export default function TypeBox({ setIsFinished }) {
 
   const updateInput = (e) => {
     setCurrInput(e.target.value);
-
     inputWordsHistory[currWordIndex] = e.target.value.trim();
     setInputWordsHistory(inputWordsHistory);
   };
@@ -228,6 +217,9 @@ export default function TypeBox({ setIsFinished }) {
       });
     }
   };
+  const handleStartButtonClick = () => {
+    start();
+  };
 
   return (
     <div className={styles.container}>
@@ -271,7 +263,7 @@ export default function TypeBox({ setIsFinished }) {
         onBlur={() => handleFocus(false)}
         onChange={(e) => updateInput(e)}
       />
-      <button onClick={() => {start()}}>Start</button>
+      <button onClick={handleStartButtonClick}>Start</button>
       <p>Live WPM: {liveWPM}</p>
       <p>{15 - timer}</p>
     </div>
