@@ -6,12 +6,13 @@ import Stats from './Stats';
 
 export default function Home() {
   const [isFinished, setIsFinished] = useState(false);
+
   return (
     <div className={styles.container}>
       <Header></Header>
       {/* <TypeBox setIsFinished={setIsFinished}/> */}
       {!isFinished ? (
-        <TypeBox setIsFinished={setIsFinished} />
+        <TypeBox setIsFinished={setIsFinished}/>
       ) : (
         <Stats setIsFinished={setIsFinished} />
       )}

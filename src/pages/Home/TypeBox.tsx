@@ -4,6 +4,7 @@ import styles from './TypeBox.module.css';
 
 export default function TypeBox({ setIsFinished }) {
   const [wordsDict, setWordsDict] = useState(wordsData);
+  const [started, setStarted] = useState(false);
 
   const words = useMemo(() => {
     return wordsData.map((e) => e.val);
@@ -47,6 +48,7 @@ export default function TypeBox({ setIsFinished }) {
 
   const start = () => {
     inputRef.current.focus();
+    setStarted(true);
     const timeOut = setInterval(() => {
       setTimer((prevTimer) => {
         const newTimer = prevTimer + 1;
@@ -66,11 +68,18 @@ export default function TypeBox({ setIsFinished }) {
   const finish = () => {
     setTimer(0);
     setIsFinished(true);
+    setStarted(false);
   };
 
   const [currChar, setCurrChar] = useState('');
 
   const [inputWordsHistory, setInputWordsHistory] = useState({});
+
+  const handleInput = () => {
+    if(!started){
+      start()
+    }
+  }
 
   useEffect(() => {
     inputRef.current.focus();
@@ -217,9 +226,6 @@ export default function TypeBox({ setIsFinished }) {
       });
     }
   };
-  const handleStartButtonClick = () => {
-    start();
-  };
 
   return (
     <div className={styles.container}>
@@ -261,11 +267,15 @@ export default function TypeBox({ setIsFinished }) {
         value={currInput}
         onFocus={() => handleFocus(true)}
         onBlur={() => handleFocus(false)}
+        onInput={handleInput}
         onChange={(e) => updateInput(e)}
       />
-      <button onClick={handleStartButtonClick}>Start</button>
-      <p>Live WPM: {liveWPM}</p>
-      <p>{15 - timer}</p>
+      {started && (
+        <>
+          <p>Live WPM: {liveWPM}</p>
+          <p>{15 - timer}</p>
+        </>
+      )}
     </div>
   );
 }
