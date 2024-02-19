@@ -115,8 +115,11 @@ export default function TypeBox({ setIsFinished, setResult }) {
   };
 
   const handleKeyDown = (e) => {
+    const key = e.key;
+    const keyCode = e.keyCode;
+    
     // backspace
-    if (e.keyCode === 8) {
+    if (keyCode === 8) {
       // jump to previous word if there is an error
       if (currCharIndex < 0 && wordSpanRefs[currWordIndex - 1].error) {
         e.preventDefault();
@@ -125,7 +128,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
         setCurrInput(inputWordsHistory[currWordIndex - 1]);
         return;
       }
-
+      
       if (currCharIndex < 0) {
         return;
       }
@@ -138,15 +141,23 @@ export default function TypeBox({ setIsFinished, setResult }) {
     }
 
     // spacebar
-    if (e.keyCode === 32) {
+    if (keyCode === 32) {
       setCurrInput('');
       setCurrWordIndex(currWordIndex + 1);
       setCurrCharIndex(-1);
       return;
     }
+    // disabling rest of keys
+    if (!(keyCode >= 48 && keyCode <= 57) && // Numbers
+        !(keyCode >= 65 && keyCode <= 90) && // Uppercase letters
+        !(keyCode >= 97 && keyCode <= 122)) { // Lowercase letters
+            e.preventDefault();
+            return
+    }
+
 
     setCurrCharIndex(currCharIndex + 1);
-    setCurrChar(e.key);
+    setCurrChar(key);
   };
 
   const getCharClassName = (wordIdx, charIdx, char, word) => {
