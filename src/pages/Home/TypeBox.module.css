@@ -4,6 +4,7 @@
 }
 .words {
   color: #446ad5;
+  font-size: 30px;
   max-width: 1000px;
   display: flex;
   flex-wrap: wrap;
@@ -17,8 +18,8 @@
 }
 .startSign{
   position: absolute;
-  top: 10px;
-  left: 100px;
+  top: 31%;
+  left: 41%;
   color: white;
   pointer-events: none;
 }

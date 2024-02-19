@@ -36,6 +36,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
   const [history, setHistory] = useState(generateObject);
 
   const [timer, setTimer] = useState(0);
+  const intervalRef = useRef(null);
 
   const [liveWPM, setLiveWPM] = useState(0);
 
@@ -63,13 +64,28 @@ export default function TypeBox({ setIsFinished, setResult }) {
         return newTimer;
       });
     }, 1000);
+    intervalRef.current = timeOut;
   };
 
   const finish = () => {
+    clearInterval(intervalRef.current);
     setTimer(0);
     setStarted(false);
     setIsFinished(true);
   };
+
+  const reset = () => {
+    clearInterval(intervalRef.current);
+    setTimer(0);
+    setLiveWPM(0)
+    setCurrChar('')
+    setCurrInput('')
+    setCurrCharIndex(-1)
+    setCurrWordIndex(0)
+    setInputWordsHistory({})
+    setStarted(false)
+    setHistory(generateObject)
+  }
 
   const [currChar, setCurrChar] = useState('');
 
@@ -83,6 +99,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
 
   useEffect(() => {
     inputRef.current.focus();
+    return () => clearInterval(intervalRef.current);
   }, []);
 
   useEffect(() => {
@@ -117,6 +134,13 @@ export default function TypeBox({ setIsFinished, setResult }) {
   const handleKeyDown = (e) => {
     const key = e.key;
     const keyCode = e.keyCode;
+    
+    //tab
+    if (keyCode === 9){
+      e.preventDefault()
+      reset()
+      return;
+    }
     
     // backspace
     if (keyCode === 8) {
