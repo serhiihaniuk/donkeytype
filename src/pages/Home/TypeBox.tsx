@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { words as wordsData } from '../../data/words';
 import styles from './TypeBox.module.css';
 
-export default function TypeBox({ setIsFinished }) {
+export default function TypeBox({ setIsFinished, setResult }) {
   const [wordsDict, setWordsDict] = useState(wordsData);
   const [started, setStarted] = useState(false);
 
@@ -56,8 +56,8 @@ export default function TypeBox({ setIsFinished }) {
         setLiveWPM(wpm);
 
         if (newTimer > 15) {
+          setResult(Math.round(calculateWPM(prevTimer)))
           clearInterval(timeOut);
-          console.log('finito');
           finish();
         }
         return newTimer;
@@ -67,8 +67,8 @@ export default function TypeBox({ setIsFinished }) {
 
   const finish = () => {
     setTimer(0);
-    setIsFinished(true);
     setStarted(false);
+    setIsFinished(true);
   };
 
   const [currChar, setCurrChar] = useState('');
@@ -166,7 +166,6 @@ export default function TypeBox({ setIsFinished }) {
         charIdx === word.length - 1 &&
         charIdx === currCharIndex
       ) {
-        console.log(charIdx);
         return 'error-char caret-right';
       }
       return 'error-char';

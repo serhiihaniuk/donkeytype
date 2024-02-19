@@ -6,15 +6,16 @@ import Stats from './Stats';
 
 export default function Home() {
   const [isFinished, setIsFinished] = useState(false);
-
+  const [result, setResult] = useState(0)
+  
   return (
     <div className={styles.container}>
-      <Header></Header>
-      {/* <TypeBox setIsFinished={setIsFinished}/> */}
+      <Header/>
+      
       {!isFinished ? (
-        <TypeBox setIsFinished={setIsFinished}/>
+        <TypeBox setIsFinished={setIsFinished} setResult={setResult}/>
       ) : (
-        <Stats setIsFinished={setIsFinished} />
+        <Stats result={result} setIsFinished={setIsFinished} />
       )}
     </div>
   );
