@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { words as wordsData } from '../../data/words';
 import styles from './TypeBox.module.css';
+import CapsLockPopup from './CapsLockPopup';
 
 export default function TypeBox({ setIsFinished, setResult }) {
   const [wordsDict, setWordsDict] = useState(wordsData);
@@ -32,6 +33,8 @@ export default function TypeBox({ setIsFinished, setResult }) {
     });
     return result;
   };
+
+  const [capsLocked, setCapsLocked] = useState(false);
 
   const [history, setHistory] = useState(generateObject);
 
@@ -134,6 +137,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
   const handleKeyDown = (e) => {
     const key = e.key;
     const keyCode = e.keyCode;
+    setCapsLocked(e.getModifierState("CapsLock"));
     
     //tab
     if (keyCode === 9){
@@ -263,6 +267,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
 
   return (
     <div className={styles.container}>
+      <CapsLockPopup open={capsLocked}/>
       <div
         className={styles.words}
         style={{
