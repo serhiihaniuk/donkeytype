@@ -1,14 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { words as wordsData } from '../../data/words';
+import { words as wordsData } from '../../../data/words';
 import styles from './TypeBox.module.css';
 import CapsLockPopup from './CapsLockPopup';
-import useLocalStorage from '../../hooks/useLocalStorage';
+import useLocalStorage from '../../../hooks/useLocalStorage';
+import TypeConfig from './TypeConfig';
 
 export default function TypeBox({ setIsFinished, setResult }) {
-  const defaultConfig = {
-    time: 15
-  }
-  const [config, updateConfigField] = useLocalStorage('config', defaultConfig);
+  const [config] = useLocalStorage('config');
 
   const [wordsDict, setWordsDict] = useState(wordsData);
   const [started, setStarted] = useState(false);
@@ -65,8 +63,8 @@ export default function TypeBox({ setIsFinished, setResult }) {
         const wpm = Math.round(calculateWPM(newTimer));
         setLiveWPM(wpm);
 
-        if (newTimer > 15) {
-          setResult(Math.round(calculateWPM(prevTimer)))
+        if (newTimer > config.time) {
+          setResult(Math.round(calculateWPM(prevTimer)));
           clearInterval(timeOut);
           finish();
         }
@@ -86,25 +84,25 @@ export default function TypeBox({ setIsFinished, setResult }) {
   const reset = () => {
     clearInterval(intervalRef.current);
     setTimer(0);
-    setLiveWPM(0)
-    setCurrChar('')
-    setCurrInput('')
-    setCurrCharIndex(-1)
-    setCurrWordIndex(0)
-    setInputWordsHistory({})
-    setStarted(false)
-    setHistory(generateObject)
-  }
+    setLiveWPM(0);
+    setCurrChar('');
+    setCurrInput('');
+    setCurrCharIndex(-1);
+    setCurrWordIndex(0);
+    setInputWordsHistory({});
+    setStarted(false);
+    setHistory(generateObject);
+  };
 
   const [currChar, setCurrChar] = useState('');
 
   const [inputWordsHistory, setInputWordsHistory] = useState({});
 
   const handleInput = () => {
-    if(!started){
-      start()
+    if (!started) {
+      start();
     }
-  }
+  };
 
   useEffect(() => {
     inputRef.current.focus();
@@ -143,15 +141,15 @@ export default function TypeBox({ setIsFinished, setResult }) {
   const handleKeyDown = (e) => {
     const key = e.key;
     const keyCode = e.keyCode;
-    setCapsLocked(e.getModifierState("CapsLock"));
-    
+    setCapsLocked(e.getModifierState('CapsLock'));
+
     //tab
-    if (keyCode === 9){
-      e.preventDefault()
-      reset()
+    if (keyCode === 9) {
+      e.preventDefault();
+      reset();
       return;
     }
-    
+
     // backspace
     if (keyCode === 8) {
       // jump to previous word if there is an error
@@ -162,7 +160,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
         setCurrInput(inputWordsHistory[currWordIndex - 1]);
         return;
       }
-      
+
       if (currCharIndex < 0) {
         return;
       }
@@ -182,13 +180,15 @@ export default function TypeBox({ setIsFinished, setResult }) {
       return;
     }
     // disabling rest of keys
-    if (!(keyCode >= 48 && keyCode <= 57) &&  // Numbers
-        !(keyCode >= 65 && keyCode <= 90) &&  // Uppercase letters
-        !(keyCode >= 97 && keyCode <= 122)) { // Lowercase letters
-            e.preventDefault();
-            return
+    if (
+      !(keyCode >= 48 && keyCode <= 57) && // Numbers
+      !(keyCode >= 65 && keyCode <= 90) && // Uppercase letters
+      !(keyCode >= 97 && keyCode <= 122)
+    ) {
+      // Lowercase letters
+      e.preventDefault();
+      return;
     }
-
 
     setCurrCharIndex(currCharIndex + 1);
     setCurrChar(key);
@@ -273,7 +273,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
 
   return (
     <div className={styles.container}>
-      <CapsLockPopup open={capsLocked}/>
+      <TypeConfig/>
       <div
         className={styles.words}
         style={{
@@ -284,14 +284,14 @@ export default function TypeBox({ setIsFinished, setResult }) {
       >
         {words.map((word, i) => (
           <span
-            key={i}
-            ref={wordSpanRefs[i].ref}
-            className={getWordClassName(i)}
+          key={i}
+          ref={wordSpanRefs[i].ref}
+          className={getWordClassName(i)}
           >
             {word.split('').map((char, idx) => (
               <span
-                key={'word' + idx}
-                className={getCharClassName(i, idx, char, word)}
+              key={'word' + idx}
+              className={getCharClassName(i, idx, char, word)}
               >
                 {char}
               </span>
@@ -302,7 +302,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
       </div>
       {!isFocused && (
         <div className={styles.startSign}>Click here to start typing</div>
-      )}
+        )}
       <input
         key="hidden-input"
         ref={inputRef}
@@ -318,9 +318,10 @@ export default function TypeBox({ setIsFinished, setResult }) {
       {started && (
         <>
           <p>Live WPM: {liveWPM}</p>
-          <p>{15 - timer}</p>
+          <p>{config.time - timer}</p>
         </>
       )}
+      <CapsLockPopup open={capsLocked} />
     </div>
   );
 }
