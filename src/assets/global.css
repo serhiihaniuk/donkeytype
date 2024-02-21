@@ -8,6 +8,9 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
+#root{
+  width: 100%;
+}
 
 body {
   margin: 0;

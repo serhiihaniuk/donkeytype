@@ -2,8 +2,14 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { words as wordsData } from '../../data/words';
 import styles from './TypeBox.module.css';
 import CapsLockPopup from './CapsLockPopup';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 export default function TypeBox({ setIsFinished, setResult }) {
+  const defaultConfig = {
+    time: 15
+  }
+  const [config, updateConfigField] = useLocalStorage('config', defaultConfig);
+
   const [wordsDict, setWordsDict] = useState(wordsData);
   const [started, setStarted] = useState(false);
 
@@ -130,7 +136,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
     setInputWordsHistory(inputWordsHistory);
   };
 
-  const handleFocus = (isFocus) => {
+  const handleFocus = (isFocus: boolean) => {
     setIsFocused(isFocus);
   };
 
@@ -176,8 +182,8 @@ export default function TypeBox({ setIsFinished, setResult }) {
       return;
     }
     // disabling rest of keys
-    if (!(keyCode >= 48 && keyCode <= 57) && // Numbers
-        !(keyCode >= 65 && keyCode <= 90) && // Uppercase letters
+    if (!(keyCode >= 48 && keyCode <= 57) &&  // Numbers
+        !(keyCode >= 65 && keyCode <= 90) &&  // Uppercase letters
         !(keyCode >= 97 && keyCode <= 122)) { // Lowercase letters
             e.preventDefault();
             return
@@ -229,7 +235,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
     }
   };
 
-  const getWordClassName = (wordIdx) => {
+  const getWordClassName = (wordIdx: number) => {
     let cls = ['word'];
     if (currWordIndex === wordIdx) {
       cls.push('active');
@@ -241,7 +247,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
   };
 
   const getExtraCharsDisplay = (word, i) => {
-    let input = inputWordsHistory[i] || currInput.trim();
+    const input = inputWordsHistory[i] || currInput.trim();
 
     if (i > currWordIndex) {
       return null;
