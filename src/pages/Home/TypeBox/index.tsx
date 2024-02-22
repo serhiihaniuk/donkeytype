@@ -1,13 +1,13 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { words as wordsData } from '../../../data/words';
 import styles from './TypeBox.module.css';
 import CapsLockPopup from './CapsLockPopup';
-import useLocalStorage from '../../../hooks/useLocalStorage';
 import TypeConfig from './TypeConfig';
+import { ConfigContext } from '../../../context/ConfigContext';
 
 export default function TypeBox({ setIsFinished, setResult }) {
-  const [config] = useLocalStorage('config');
-
+  const [config, setConfig] = useContext(ConfigContext)
+  
   const [wordsDict, setWordsDict] = useState(wordsData);
   const [started, setStarted] = useState(false);
 
@@ -183,9 +183,8 @@ export default function TypeBox({ setIsFinished, setResult }) {
     if (
       !(keyCode >= 48 && keyCode <= 57) && // Numbers
       !(keyCode >= 65 && keyCode <= 90) && // Uppercase letters
-      !(keyCode >= 97 && keyCode <= 122)
+      !(keyCode >= 97 && keyCode <= 122) // Lowercase letters
     ) {
-      // Lowercase letters
       e.preventDefault();
       return;
     }

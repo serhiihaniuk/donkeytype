@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styles from './TypeConfig.module.css';
-import useLocalStorage from '../../../hooks/useLocalStorage';
+import { ConfigContext } from '../../../context/ConfigContext';
 
 export default function TypeConfig() {
-  const [config, updateConfig] = useLocalStorage('config');
+  const [config, updateConfig] = useContext(ConfigContext)
+
   const timeOptions = [15, 30, 60];
   return (
     <div className={styles.container}>
@@ -11,7 +12,7 @@ export default function TypeConfig() {
         {timeOptions.map((item, i) => (
           <span
             key={i}
-            onClick={() => updateConfig('time', item)}
+            onClick={() => updateConfig({time: item})}
             className={styles.configButton}
           >
             {item}

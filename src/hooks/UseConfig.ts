@@ -1,10 +1,11 @@
 import { useState } from 'react';
 
-export default function useLocalStorage(key) {
+const UseConfig = (key: string) => {
   const defaultConfig = {
     time: 15
-  }
-  const [storedValue, setStoredValue] = useState(() => {
+  };
+
+  const [config, setConfig] = useState(() => {
     try {
       const item = window.localStorage.getItem(key);
       if (item) {
@@ -14,16 +15,18 @@ export default function useLocalStorage(key) {
         return defaultConfig;
       }
     } catch (error) {
-      console.error('Error retrieving data from localStorage:', error);
+      console.error('Error retrieving or parsing config:', error);
       return defaultConfig;
     }
   });
 
-  const updateFieldValue = (field, value) => {
-    const data = { ...storedValue, [field]: value };
-    setStoredValue(data);
+  const updateConfig = (field) => {
+    const data = { ...config, ...field };
+    setConfig(data);
     window.localStorage.setItem(key, JSON.stringify(data));
   };
 
-  return [storedValue, updateFieldValue];
-}
+  return [config, updateConfig];
+};
+
+export default UseConfig;
