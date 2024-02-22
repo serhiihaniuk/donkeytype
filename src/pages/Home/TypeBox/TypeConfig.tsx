@@ -3,7 +3,7 @@ import styles from './TypeConfig.module.css';
 import { ConfigContext } from '../../../context/ConfigContext';
 
 export default function TypeConfig() {
-  const [config, updateConfig] = useContext(ConfigContext)
+  const [config, updateConfig] = useContext(ConfigContext);
 
   const timeOptions = [15, 30, 60];
   return (
@@ -12,8 +12,9 @@ export default function TypeConfig() {
         {timeOptions.map((item, i) => (
           <span
             key={i}
-            onClick={() => updateConfig({time: item})}
             className={styles.configButton}
+            onClick={() => updateConfig({ time: item })}
+            style={{'color':  item === config.time ? '#f2ce83' : 'inherit'}}
           >
             {item}
           </span>

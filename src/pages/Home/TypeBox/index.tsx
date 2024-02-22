@@ -6,8 +6,8 @@ import TypeConfig from './TypeConfig';
 import { ConfigContext } from '../../../context/ConfigContext';
 
 export default function TypeBox({ setIsFinished, setResult }) {
-  const [config, setConfig] = useContext(ConfigContext)
-  
+  const [config, setConfig] = useContext(ConfigContext);
+
   const [wordsDict, setWordsDict] = useState(wordsData);
   const [started, setStarted] = useState(false);
 
@@ -272,7 +272,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
 
   return (
     <div className={styles.container}>
-      <TypeConfig/>
+      <TypeConfig />
       <div
         className={styles.words}
         style={{
@@ -283,14 +283,14 @@ export default function TypeBox({ setIsFinished, setResult }) {
       >
         {words.map((word, i) => (
           <span
-          key={i}
-          ref={wordSpanRefs[i].ref}
-          className={getWordClassName(i)}
+            key={i}
+            ref={wordSpanRefs[i].ref}
+            className={getWordClassName(i)}
           >
             {word.split('').map((char, idx) => (
               <span
-              key={'word' + idx}
-              className={getCharClassName(i, idx, char, word)}
+                key={'word' + idx}
+                className={getCharClassName(i, idx, char, word)}
               >
                 {char}
               </span>
@@ -301,7 +301,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
       </div>
       {!isFocused && (
         <div className={styles.startSign}>Click here to start typing</div>
-        )}
+      )}
       <input
         key="hidden-input"
         ref={inputRef}
