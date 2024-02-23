@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import styles from './TypeConfig.module.css';
-import { ConfigContext } from '../../../context/ConfigContext';
+import { ConfigContext } from '@/context/ConfigContext';
 
 export default function TypeConfig() {
   const [config, updateConfig] = useContext(ConfigContext);

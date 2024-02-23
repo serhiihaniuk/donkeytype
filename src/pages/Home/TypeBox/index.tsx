@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { words as wordsData } from '../../../data/words';
+import { words as wordsData } from '@/data/words'
 import styles from './TypeBox.module.css';
 import CapsLockPopup from './CapsLockPopup';
 import TypeConfig from './TypeConfig';
-import { ConfigContext } from '../../../context/ConfigContext';
+import { ConfigContext } from '@/context/ConfigContext';
 
 export default function TypeBox({ setIsFinished, setResult }) {
-  const [config, setConfig] = useContext(ConfigContext);
+  const [config] = useContext(ConfigContext);
 
   const [wordsDict, setWordsDict] = useState(wordsData);
   const [started, setStarted] = useState(false);
@@ -287,7 +287,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
             ref={wordSpanRefs[i].ref}
             className={getWordClassName(i)}
           >
-            {word.split('').map((char, idx) => (
+            {word.split('').map((char: string, idx: number) => (
               <span
                 key={'word' + idx}
                 className={getCharClassName(i, idx, char, word)}

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import TypeBox from './TypeBox';
-import Header from '../../components/Header';
+import Header from '@/components/Header';
 import styles from './Home.module.css';
 import Stats from './Stats';
 
