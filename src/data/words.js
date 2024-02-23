@@ -1,4 +1,4 @@
-export const words = [
+export const wordsData = [
   {
     val: 'sample'
   },
@@ -13,9 +13,6 @@ export const words = [
   },
   {
     val: 'and'
-  },
-  {
-    val: 'however'
   },
   {
     val: 'many'

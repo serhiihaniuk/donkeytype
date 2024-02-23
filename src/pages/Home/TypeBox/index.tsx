@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { words as wordsData } from '@/data/words'
+import wordsData  from '@/data/words'
 import styles from './TypeBox.module.css';
 import CapsLockPopup from './CapsLockPopup';
 import TypeConfig from './TypeConfig';
