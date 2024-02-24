@@ -1,4 +1,4 @@
-export const wordsData = [
+const wordsData = [
   {
     val: 'sample'
   },
@@ -64,3 +64,5 @@ export const wordsData = [
   },
 
 ]
+
+export default wordsData;

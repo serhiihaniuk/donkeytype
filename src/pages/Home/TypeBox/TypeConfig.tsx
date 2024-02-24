@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import styles from './TypeConfig.module.css';
 import { ConfigContext } from '@/context/ConfigContext';
 

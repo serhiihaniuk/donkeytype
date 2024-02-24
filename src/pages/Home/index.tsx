@@ -1,20 +1,24 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import TypeBox from './TypeBox';
 import Header from '@/components/Header';
 import styles from './Home.module.css';
 import Stats from './Stats';
+import TypeConfig from './TypeBox/TypeConfig';
+import { StatusContext } from '@/context/StatusContext';
 
 export default function Home() {
-  const [isFinished, setIsFinished] = useState(false);
-  const [result, setResult] = useState(0)
-  
+  const [result, setResult] = useState(0);
+  const [status, setStatus] = useContext(StatusContext)
   return (
     <div className={styles.container}>
-      <Header/>
-      {!isFinished ? (
-        <TypeBox setIsFinished={setIsFinished} setResult={setResult}/>
+      <Header />
+      {status !== 'finished' ? (
+        <>
+          <TypeConfig />
+          <TypeBox setResult={setResult} />
+        </>
       ) : (
-        <Stats result={result} setIsFinished={setIsFinished} />
+        <Stats result={result} setStatus={setStatus} />
       )}
     </div>
   );

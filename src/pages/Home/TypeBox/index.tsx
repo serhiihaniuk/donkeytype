@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import wordsData  from '@/data/words'
+import wordsData from '@/data/words';
 import styles from './TypeBox.module.css';
 import CapsLockPopup from './CapsLockPopup';
-import TypeConfig from './TypeConfig';
 import { ConfigContext } from '@/context/ConfigContext';
+import { StatusContext } from '@/context/StatusContext';
 
-export default function TypeBox({ setIsFinished, setResult }) {
+export default function TypeBox({ setResult }) {
   const [config] = useContext(ConfigContext);
+  const [status, setStatus] = useContext(StatusContext)
 
   const [wordsDict, setWordsDict] = useState(wordsData);
   const [started, setStarted] = useState(false);
@@ -56,7 +57,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
 
   const start = () => {
     inputRef.current.focus();
-    setStarted(true);
+    setStatus('started')
     const timeOut = setInterval(() => {
       setTimer((prevTimer) => {
         const newTimer = prevTimer + 1;
@@ -77,8 +78,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
   const finish = () => {
     clearInterval(intervalRef.current);
     setTimer(0);
-    setStarted(false);
-    setIsFinished(true);
+    setStatus('finished')
   };
 
   const reset = () => {
@@ -90,7 +90,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
     setCurrCharIndex(-1);
     setCurrWordIndex(0);
     setInputWordsHistory({});
-    setStarted(false);
+    setStatus('waiting')
     setHistory(generateObject);
   };
 
@@ -99,7 +99,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
   const [inputWordsHistory, setInputWordsHistory] = useState({});
 
   const handleInput = () => {
-    if (!started) {
+    if (status === 'waiting') {
       start();
     }
   };
@@ -235,7 +235,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
   };
 
   const getWordClassName = (wordIdx: number) => {
-    let cls = ['word'];
+    const cls = ['word'];
     if (currWordIndex === wordIdx) {
       cls.push('active');
     }
@@ -256,7 +256,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
       return null;
     } else {
       const extra = input.slice(word.length, input.length).split('');
-      return extra.map((c, idx) => {
+      return extra.map((c: string, idx: number) => {
         const isLastChar = idx === extra.length - 1 && i === currWordIndex;
         return (
           <span
@@ -272,7 +272,6 @@ export default function TypeBox({ setIsFinished, setResult }) {
 
   return (
     <div className={styles.container}>
-      <TypeConfig />
       <div
         className={styles.words}
         style={{
@@ -314,7 +313,7 @@ export default function TypeBox({ setIsFinished, setResult }) {
         onInput={handleInput}
         onChange={(e) => updateInput(e)}
       />
-      {started && (
+      {status === 'started' && (
         <>
           <p>Live WPM: {liveWPM}</p>
           <p>{config.time - timer}</p>

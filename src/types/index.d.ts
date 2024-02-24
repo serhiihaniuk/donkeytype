@@ -6,3 +6,7 @@ declare module '@/data/words' {
   const wordsData: { val: string }[];
   export default wordsData;
 }
+declare module "*.svg" {
+  const content: string;
+  export default content;
+}

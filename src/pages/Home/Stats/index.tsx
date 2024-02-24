@@ -1,13 +1,11 @@
-import React from 'react';
-
-export default function Stats({ result, setIsFinished }) {
+export default function Stats({ result, setStatus }) {
   return (
     <div>
       <p>Stats</p>
       <p>WPM: {result}</p>
       <button
         onClick={() => {
-          setIsFinished(false);
+          setStatus('waiting');
         }}
       >
         Restart

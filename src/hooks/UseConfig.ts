@@ -1,11 +1,18 @@
 import { useState } from 'react';
 
+interface ConfigField {
+  [key: string]: number | string;
+}
+interface Config {
+  [key: string]: number | string;
+}
+
 const UseConfig = (key: string) => {
   const defaultConfig = {
     time: 15
   };
 
-  const [config, setConfig] = useState(() => {
+  const [config, setConfig] = useState<Config>(() => {
     try {
       const item = window.localStorage.getItem(key);
       if (item) {
@@ -20,7 +27,7 @@ const UseConfig = (key: string) => {
     }
   });
 
-  const updateConfig = (field) => {
+  const updateConfig = (field: ConfigField) => {
     const data = { ...config, ...field };
     setConfig(data);
     window.localStorage.setItem(key, JSON.stringify(data));
