@@ -5,16 +5,17 @@ import CapsLockPopup from './CapsLockPopup';
 import { ConfigContext } from '@/context/ConfigContext';
 import { StatusContext } from '@/context/StatusContext';
 
+const shuffleArray = (arr) => {
+  return arr.sort(() => Math.random() - 0.5)
+}
+
+const wordsArr = shuffleArray(wordsData)
+
 export default function TypeBox({ setResult }) {
   const [config] = useContext(ConfigContext);
   const [status, setStatus] = useContext(StatusContext)
 
-  const [wordsDict, setWordsDict] = useState(wordsData);
-  const [started, setStarted] = useState(false);
-
-  const words = useMemo(() => {
-    return wordsData.map((e) => e.val);
-  }, [wordsDict]);
+  const [words, setWords] = useState(wordsArr);
 
   const wordSpanRefs = useMemo(
     () =>
@@ -92,6 +93,7 @@ export default function TypeBox({ setResult }) {
     setInputWordsHistory({});
     setStatus('waiting')
     setHistory(generateObject);
+    setWords(shuffleArray(words))
   };
 
   const [currChar, setCurrChar] = useState('');
