@@ -20,7 +20,7 @@ export default function TypeBox({ setResult }) {
     () =>
       Array(words.length)
         .fill(0)
-        .map((i) => ({ error: false, ref: React.createRef() })),
+        .map(() => ({ error: false, ref: React.createRef() })),
     [words]
   );
 

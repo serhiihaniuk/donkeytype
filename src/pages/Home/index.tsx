@@ -12,11 +12,9 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <Header />
+      <TypeConfig isVisible={status === 'waiting'} />
       {status !== 'finished' ? (
-        <>
-          <TypeConfig />
           <TypeBox setResult={setResult} />
-        </>
       ) : (
         <Stats result={result} setStatus={setStatus} />
       )}
