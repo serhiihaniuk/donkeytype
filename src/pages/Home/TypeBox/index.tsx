@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { MutableRefObject, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import wordsData from '@/data/words';
 import styles from './TypeBox.module.css';
 import CapsLockPopup from './CapsLockPopup';
@@ -32,7 +32,7 @@ export default function TypeBox({ setResult }) {
     [words]
   );
 
-  const inputRef = useRef(null);
+  const inputRef: MutableRefObject<HTMLInputElement | null> = useRef(null);
   const [currInput, setCurrInput] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
@@ -40,8 +40,8 @@ export default function TypeBox({ setResult }) {
   const [currCharIndex, setCurrCharIndex] = useState(-1);
 
   const generateObject = () => {
-    const result = {};
-    words.forEach((_, i) => {
+    const result: { [key: number]: object } = {};
+    words.forEach((_: string, i: number) => {
       result[i] = {};
     });
     return result;
@@ -56,7 +56,7 @@ export default function TypeBox({ setResult }) {
 
   const [liveWPM, setLiveWPM] = useState(0);
 
-  const calculateWPM = (t) => {
+  const calculateWPM = (t: number) => {
     const chars = document.querySelectorAll('.correct-char').length;
     const wpm = ((chars / t) * 60) / 5;
 
@@ -64,7 +64,7 @@ export default function TypeBox({ setResult }) {
   };
 
   const start = () => {
-    inputRef.current.focus();
+    inputRef.current?.focus();
     setStatus('started');
     const timeOut = setInterval(() => {
       setTimer((prevTimer) => {
@@ -113,8 +113,7 @@ export default function TypeBox({ setResult }) {
 
   const [currChar, setCurrChar] = useState('');
 
-  const [inputWordsHistory, setInputWordsHistory] = useState({});
-
+  const [inputWordsHistory, setInputWordsHistory] = useState<{ [key: string]: string }>({});
   const handleInput = () => {
     if (status === 'waiting') {
       start();
@@ -122,7 +121,7 @@ export default function TypeBox({ setResult }) {
   };
 
   useEffect(() => {
-    inputRef.current.focus();
+    inputRef.current?.focus();
     return () => clearInterval(intervalRef.current);
   }, []);
 
@@ -136,11 +135,11 @@ export default function TypeBox({ setResult }) {
         Object.values(history[wordIdx]).some(
           (value) => value === false || value === undefined
         ) ||
-        inputWordsHistory[wordIdx]?.length > words[wordIdx].length
-      ) {
-        wordSpanRefs[wordIdx].error = true;
+        inputWordsHistory[Number(wordIdx)]?.length > words[Number(wordIdx)].length
+        ) {
+        wordSpanRefs[Number(wordIdx)].error = true;
       } else {
-        wordSpanRefs[wordIdx].error = false;
+        wordSpanRefs[Number(wordIdx)].error = false;
       }
     }
   };
@@ -210,7 +209,7 @@ export default function TypeBox({ setResult }) {
     setCurrChar(key);
   };
 
-  const getCharClassName = (wordIdx, charIdx, char, word) => {
+  const getCharClassName = (wordIdx: number, charIdx: number, char: string, word: string) => {
     if (history[wordIdx][charIdx] === true) {
       if (
         wordIdx === currWordIndex &&
@@ -262,7 +261,7 @@ export default function TypeBox({ setResult }) {
     return cls.join(' ');
   };
 
-  const getExtraCharsDisplay = (word, i) => {
+  const getExtraCharsDisplay = (word: string, i: number) => {
     const input = inputWordsHistory[i] || currInput.trim();
 
     if (i > currWordIndex) {
@@ -295,9 +294,9 @@ export default function TypeBox({ setResult }) {
           opacity: isFocused ? '1' : '.25',
           filter: isFocused ? '' : 'blur(4px)',
         }}
-        onClick={() => inputRef.current.focus()}
+        onClick={() => inputRef.current?.focus()}
       >
-        {words.map((word, i) => (
+        {words.map((word: string, i: number) => (
           <span
             key={i}
             ref={wordSpanRefs[i].ref}
