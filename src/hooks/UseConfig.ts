@@ -9,7 +9,8 @@ interface Config {
 
 const UseConfig = (key: string) => {
   const defaultConfig = {
-    time: 15
+    time: 15,
+    capitalizing: false
   };
 
   const [config, setConfig] = useState<Config>(() => {

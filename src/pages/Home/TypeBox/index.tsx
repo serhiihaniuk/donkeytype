@@ -6,14 +6,21 @@ import { ConfigContext } from '@/context/ConfigContext';
 import { StatusContext } from '@/context/StatusContext';
 
 const shuffleArray = (arr) => {
-  return arr.sort(() => Math.random() - 0.5)
+  return arr.sort(() => Math.random() - 0.5);
+};
+function capitalize(words, probability = 0.35) {
+  return words.map((word) =>
+    Math.random() < probability
+      ? word.charAt(0).toUpperCase() + word.slice(1)
+      : word
+  );
 }
 
 const wordsArr = shuffleArray(wordsData)
 
 export default function TypeBox({ setResult }) {
   const [config] = useContext(ConfigContext);
-  const [status, setStatus] = useContext(StatusContext)
+  const [status, setStatus] = useContext(StatusContext);
 
   const [words, setWords] = useState(wordsArr);
 
@@ -34,7 +41,7 @@ export default function TypeBox({ setResult }) {
 
   const generateObject = () => {
     const result = {};
-    words.forEach((item, i) => {
+    words.forEach((_, i) => {
       result[i] = {};
     });
     return result;
@@ -58,7 +65,7 @@ export default function TypeBox({ setResult }) {
 
   const start = () => {
     inputRef.current.focus();
-    setStatus('started')
+    setStatus('started');
     const timeOut = setInterval(() => {
       setTimer((prevTimer) => {
         const newTimer = prevTimer + 1;
@@ -79,7 +86,7 @@ export default function TypeBox({ setResult }) {
   const finish = () => {
     clearInterval(intervalRef.current);
     setTimer(0);
-    setStatus('finished')
+    setStatus('finished');
   };
 
   const reset = () => {
@@ -91,10 +98,18 @@ export default function TypeBox({ setResult }) {
     setCurrCharIndex(-1);
     setCurrWordIndex(0);
     setInputWordsHistory({});
-    setStatus('waiting')
+    setStatus('waiting');
     setHistory(generateObject);
-    setWords(shuffleArray(words))
+    setWords(shuffleArray(words));
   };
+
+  useEffect(() => {
+    if (config.capitals) {
+      setWords(capitalize(shuffleArray(words)));
+    } else {
+      setWords(shuffleArray(wordsData));
+    }
+  }, [config]);
 
   const [currChar, setCurrChar] = useState('');
 

@@ -1,5 +1,6 @@
 interface Config {
-  time: number;
+  time: number,
+  capitals: boolean,
 }
 
 export default Config;

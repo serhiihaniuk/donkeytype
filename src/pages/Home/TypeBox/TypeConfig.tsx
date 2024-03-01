@@ -22,6 +22,13 @@ export default function TypeConfig({ isVisible }) {
             {item}
           </span>
         ))}
+        <span
+          className={styles.configButton}
+          onClick={() => updateConfig({ capitals: !config.capitals })}
+          style={{ color: config.capitals ? '#f2ce83' : 'inherit' }}
+        >
+          capitals
+        </span>
       </div>
     </div>
   );
