@@ -1,29 +1,39 @@
-import React, { MutableRefObject, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import wordsData from '@/data/words';
 import styles from './TypeBox.module.css';
 import CapsLockPopup from './CapsLockPopup';
 import { ConfigContext } from '@/context/ConfigContext';
 import { StatusContext } from '@/context/StatusContext';
 
-const shuffleArray = (arr) => {
-  return arr.sort(() => Math.random() - 0.5);
+type Props = {
+  setResult: (val: number) => void;
 };
-function capitalize(words, probability = 0.35) {
-  return words.map((word) =>
-    Math.random() < probability
-      ? word.charAt(0).toUpperCase() + word.slice(1)
-      : word
-  );
-}
 
-const wordsArr = shuffleArray(wordsData)
-
-export default function TypeBox({ setResult }) {
+const TypeBox: React.FC<Props> = ({ setResult }) => {
   const [config] = useContext(ConfigContext);
   const [status, setStatus] = useContext(StatusContext);
 
-  const [words, setWords] = useState(wordsArr);
+  const generateWordsSet = (words: string[]) => {
+    let res = words.sort(() => Math.random() - 0.5);
+    if (config.capitals) {
+      res = res.map((word) =>
+        Math.random() < 0.35 // probability
+          ? word.charAt(0).toUpperCase() + word.slice(1)
+          : word
+      );
+    }
+    return res
+  };
 
+  const wordsArr = useMemo(() => generateWordsSet(wordsData), []);
+  const [words, setWords] = useState(wordsArr);
   const wordSpanRefs = useMemo(
     () =>
       Array(words.length)
@@ -100,26 +110,24 @@ export default function TypeBox({ setResult }) {
     setInputWordsHistory({});
     setStatus('waiting');
     setHistory(generateObject);
-    setWords(shuffleArray(words));
+    setWords(generateWordsSet(wordsData));
   };
 
-  useEffect(() => {
-    if (config.capitals) {
-      setWords(capitalize(shuffleArray(words)));
-    } else {
-      setWords(shuffleArray(wordsData));
-    }
-  }, [config]);
-
+  
   const [currChar, setCurrChar] = useState('');
-
-  const [inputWordsHistory, setInputWordsHistory] = useState<{ [key: string]: string }>({});
+  
+  const [inputWordsHistory, setInputWordsHistory] = useState<{
+    [key: string]: string;
+  }>({});
   const handleInput = () => {
     if (status === 'waiting') {
       start();
     }
   };
-
+  useEffect(() => {
+    setWords(generateWordsSet(wordsData));
+  }, [config]);
+  
   useEffect(() => {
     inputRef.current?.focus();
     return () => clearInterval(intervalRef.current);
@@ -135,8 +143,9 @@ export default function TypeBox({ setResult }) {
         Object.values(history[wordIdx]).some(
           (value) => value === false || value === undefined
         ) ||
-        inputWordsHistory[Number(wordIdx)]?.length > words[Number(wordIdx)].length
-        ) {
+        inputWordsHistory[Number(wordIdx)]?.length >
+          words[Number(wordIdx)].length
+      ) {
         wordSpanRefs[Number(wordIdx)].error = true;
       } else {
         wordSpanRefs[Number(wordIdx)].error = false;
@@ -209,7 +218,12 @@ export default function TypeBox({ setResult }) {
     setCurrChar(key);
   };
 
-  const getCharClassName = (wordIdx: number, charIdx: number, char: string, word: string) => {
+  const getCharClassName = (
+    wordIdx: number,
+    charIdx: number,
+    char: string,
+    word: string
+  ) => {
     if (history[wordIdx][charIdx] === true) {
       if (
         wordIdx === currWordIndex &&
@@ -339,3 +353,5 @@ export default function TypeBox({ setResult }) {
     </div>
   );
 }
+
+export default TypeBox;
