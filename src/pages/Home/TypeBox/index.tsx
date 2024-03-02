@@ -29,9 +29,18 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
           : word
       );
     }
-    return res
-  };
+    if (config.numbers) {
+      for (let i = 0; i < 10; i++) {
+        const position = Math.floor(Math.random() * words.length);
+        const randomNumber = Math.floor(
+          Math.random() * (i % 2 == 0 ? 99 : 9999)
+        );
 
+        res.splice(position, 1, randomNumber.toString());
+      }
+    }
+    return res;
+  };
   const wordsArr = useMemo(() => generateWordsSet(wordsData), []);
   const [words, setWords] = useState(wordsArr);
   const wordSpanRefs = useMemo(
@@ -60,9 +69,8 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   const [capsLocked, setCapsLocked] = useState(false);
 
   const [history, setHistory] = useState(generateObject);
-
   const [timer, setTimer] = useState(0);
-  const intervalRef = useRef(null);
+  const intervalRef: { current: NodeJS.Timeout | null } = useRef(null);
 
   const [liveWPM, setLiveWPM] = useState(0);
 
@@ -94,13 +102,13 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   };
 
   const finish = () => {
-    clearInterval(intervalRef.current);
+    clearInterval(intervalRef.current as NodeJS.Timeout);
     setTimer(0);
     setStatus('finished');
   };
 
   const reset = () => {
-    clearInterval(intervalRef.current);
+    clearInterval(intervalRef.current as NodeJS.Timeout);
     setTimer(0);
     setLiveWPM(0);
     setCurrChar('');
@@ -113,9 +121,8 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     setWords(generateWordsSet(wordsData));
   };
 
-  
   const [currChar, setCurrChar] = useState('');
-  
+
   const [inputWordsHistory, setInputWordsHistory] = useState<{
     [key: string]: string;
   }>({});
@@ -127,10 +134,10 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   useEffect(() => {
     setWords(generateWordsSet(wordsData));
   }, [config]);
-  
+
   useEffect(() => {
     inputRef.current?.focus();
-    return () => clearInterval(intervalRef.current);
+    return () => clearInterval(intervalRef.current as NodeJS.Timeout);
   }, []);
 
   useEffect(() => {
@@ -153,7 +160,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     }
   };
 
-  const updateInput = (e) => {
+  const updateInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrInput(e.target.value);
     inputWordsHistory[currWordIndex] = e.target.value.trim();
     setInputWordsHistory(inputWordsHistory);
@@ -163,7 +170,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     setIsFocused(isFocus);
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     const key = e.key;
     const keyCode = e.keyCode;
     setCapsLocked(e.getModifierState('CapsLock'));
@@ -352,6 +359,6 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
       <CapsLockPopup open={capsLocked} />
     </div>
   );
-}
+};
 
 export default TypeBox;

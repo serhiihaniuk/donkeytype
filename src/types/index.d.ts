@@ -3,7 +3,7 @@ declare module "*.module.css" {
   export default content;
 }
 declare module '@/data/words' {
-  const wordsData: { val: string }[];
+  const wordsData: string[];
   export default wordsData;
 }
 declare module "*.svg" {
