@@ -1,5 +1,6 @@
 import React, {
   MutableRefObject,
+  RefObject,
   useContext,
   useEffect,
   useMemo,
@@ -16,11 +17,19 @@ type Props = {
   setResult: (val: number) => void;
 };
 
+type HistoryObject = { [key: number]: { [key: number]: boolean | undefined } };
+
+interface WordRefs {
+  error: boolean;
+  ref: RefObject<HTMLSpanElement>;
+}
+
 const TypeBox: React.FC<Props> = ({ setResult }) => {
   const [config] = useContext(ConfigContext);
   const [status, setStatus] = useContext(StatusContext);
 
   const generateWordsSet = (words: string[]) => {
+    console.log(words)
     let res = words.sort(() => Math.random() - 0.5);
     if (config.capitals) {
       res = res.map((word) =>
@@ -30,7 +39,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
       );
     }
     if (config.numbers) {
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 2; i++) {
         const position = Math.floor(Math.random() * words.length);
         const randomNumber = Math.floor(
           Math.random() * (i % 2 == 0 ? 99 : 9999)
@@ -41,9 +50,10 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     }
     return res;
   };
+
   const wordsArr = useMemo(() => generateWordsSet(wordsData), []);
   const [words, setWords] = useState(wordsArr);
-  const wordSpanRefs = useMemo(
+  const wordSpanRefs: WordRefs[] = useMemo(
     () =>
       Array(words.length)
         .fill(0)
@@ -59,7 +69,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   const [currCharIndex, setCurrCharIndex] = useState(-1);
 
   const generateObject = () => {
-    const result: { [key: number]: object } = {};
+    const result: HistoryObject = {};
     words.forEach((_: string, i: number) => {
       result[i] = {};
     });
@@ -68,7 +78,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
 
   const [capsLocked, setCapsLocked] = useState(false);
 
-  const [history, setHistory] = useState(generateObject);
+  const [history, setHistory] = useState<HistoryObject>(generateObject);
   const [timer, setTimer] = useState(0);
   const intervalRef: { current: NodeJS.Timeout | null } = useRef(null);
 
@@ -343,7 +353,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
         ref={inputRef}
         type="text"
         className={styles.hiddenInput}
-        onKeyDown={(e) => handleKeyDown(e)}
+        onKeyDown={handleKeyDown}
         value={currInput}
         onFocus={() => handleFocus(true)}
         onBlur={() => handleFocus(false)}
