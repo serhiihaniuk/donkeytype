@@ -29,8 +29,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   const [status, setStatus] = useContext(StatusContext);
 
   const generateWordsSet = (words: string[]) => {
-    console.log(words)
-    let res = words.sort(() => Math.random() - 0.5);
+    let res = [...words].sort(() => Math.random() - 0.5);
     if (config.capitals) {
       res = res.map((word) =>
         Math.random() < 0.35 // probability
