@@ -1,8 +1,6 @@
+import { ConfigField } from '@/types/Config';
 import { useState } from 'react';
 
-interface ConfigField {
-  [key: string]: number | string;
-}
 interface Config {
   [key: string]: number | string;
 }
@@ -10,7 +8,7 @@ interface Config {
 const UseConfig = (key: string) => {
   const defaultConfig = {
     time: 15,
-    capitalizing: false
+    capitalizing: false,
   };
 
   const [config, setConfig] = useState<Config>(() => {

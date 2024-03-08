@@ -8,13 +8,15 @@ import { StatusContext } from '@/context/StatusContext';
 
 export default function Home() {
   const [result, setResult] = useState(0);
-  const [status, setStatus] = useContext(StatusContext)
+  const [status, setStatus] = useContext(StatusContext);
   return (
     <div className={styles.container}>
       <Header />
-      <TypeConfig isVisible={status === 'waiting'} />
       {status !== 'finished' ? (
+        <>
+          <TypeConfig isVisible={status === 'waiting'} />
           <TypeBox setResult={setResult} />
+        </>
       ) : (
         <Stats result={result} setStatus={setStatus} />
       )}

@@ -9,11 +9,11 @@ const App: React.FC = () => {
   const [status, setStatus] = useState('waiting');
   return (
     <>
-      <StatusContext.Provider value={[status, setStatus]}>
-        <ConfigContext.Provider value={[config, updateConfig]}>
+      <ConfigContext.Provider value={[config, updateConfig]}>
+        <StatusContext.Provider value={[status, setStatus]}>
           <Home />
-        </ConfigContext.Provider>
-      </StatusContext.Provider>
+        </StatusContext.Provider>
+      </ConfigContext.Provider>
     </>
   );
 };

@@ -12,21 +12,26 @@ import styles from './TypeBox.module.css';
 import CapsLockPopup from './CapsLockPopup';
 import { ConfigContext } from '@/context/ConfigContext';
 import { StatusContext } from '@/context/StatusContext';
+import { ConfigContextType } from '@/types/Config';
+import { StatusContextType } from '@/types/Status';
 
 type Props = {
   setResult: (val: number) => void;
 };
 
 type HistoryObject = { [key: number]: { [key: number]: boolean | undefined } };
+type speedResults = { [key: number]: number }
 
 interface WordRefs {
   error: boolean;
   ref: RefObject<HTMLSpanElement>;
 }
 
+const speedResults: speedResults = {}
+
 const TypeBox: React.FC<Props> = ({ setResult }) => {
-  const [config] = useContext(ConfigContext);
-  const [status, setStatus] = useContext(StatusContext);
+  const [config] = useContext(ConfigContext) as ConfigContextType | null;
+  const [status, setStatus] = useContext(StatusContext) as StatusContextType;
 
   const generateWordsSet = (words: string[]) => {
     let res = [...words].sort(() => Math.random() - 0.5);
@@ -38,7 +43,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
       );
     }
     if (config.numbers) {
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < words.length/4; i++) {
         const position = Math.floor(Math.random() * words.length);
         const randomNumber = Math.floor(
           Math.random() * (i % 2 == 0 ? 99 : 9999)
@@ -93,17 +98,19 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   const start = () => {
     inputRef.current?.focus();
     setStatus('started');
+
     const timeOut = setInterval(() => {
       setTimer((prevTimer) => {
         const newTimer = prevTimer + 1;
         const wpm = Math.round(calculateWPM(newTimer));
         setLiveWPM(wpm);
-
+        
         if (newTimer > config.time) {
-          setResult(Math.round(calculateWPM(prevTimer)));
+          setResult({wpm: Math.round(calculateWPM(prevTimer)), speedHistory: Object.values(speedResults)});
           clearInterval(timeOut);
           finish();
         }
+        speedResults[newTimer] = wpm
         return newTimer;
       });
     }, 1000);
@@ -371,3 +378,4 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
 };
 
 export default TypeBox;
+ 

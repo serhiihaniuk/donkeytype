@@ -1,3 +1,4 @@
+import { ConfigContextType } from '@/types/Config';
 import { createContext } from 'react';
 
-export const ConfigContext = createContext({time: 15});
+export const ConfigContext = createContext<ConfigContextType | null>(null);

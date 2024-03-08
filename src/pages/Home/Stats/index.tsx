@@ -1,8 +1,15 @@
-export default function Stats({ result, setStatus }) {
+import Chart from "./Chart";
+
+interface Props {
+  result: number,
+  setStatus: React.Dispatch<React.SetStateAction<string>>;
+}
+const Stats: React.FC<Props> = ({ result, setStatus }) => {
   return (
     <div>
       <p>Stats</p>
-      <p>WPM: {result}</p>
+      <p>WPM: {result.wpm}</p>
+      <Chart chartData={result}></Chart>
       <button
         onClick={() => {
           setStatus('waiting');
@@ -13,3 +20,5 @@ export default function Stats({ result, setStatus }) {
     </div>
   );
 }
+
+export default Stats;
