@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -18,9 +17,12 @@ ChartJS.register(
   Title,
   Tooltip
 );
+interface Props {
+  chartData: number[]
+}
 
-const Chart = ({ chartData }) => {
-  const labels = [...Array(chartData.speedHistory.length).keys()].slice(1);
+const Chart = ({ chartData }: Props) => {
+  const labels = [...Array(chartData.length).keys()].slice(1);
 
   const options = {
     scales: {
@@ -46,7 +48,7 @@ const Chart = ({ chartData }) => {
         pointHoverBorderWidth: 2,
         pointRadius: 2,
         pointHitRadius: 5,
-        data: chartData.speedHistory,
+        data: chartData,
       },
     ],
   };

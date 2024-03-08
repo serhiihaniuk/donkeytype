@@ -5,10 +5,12 @@ import styles from './Home.module.css';
 import Stats from './Stats';
 import TypeConfig from './TypeBox/TypeConfig';
 import { StatusContext } from '@/context/StatusContext';
+import { Results } from '@/types/Results';
+import { StatusContextType } from '@/types/Status';
 
 export default function Home() {
-  const [result, setResult] = useState(0);
-  const [status, setStatus] = useContext(StatusContext);
+  const [result, setResult] = useState<Results>({wpm: 0, speedHistory: []});
+  const [status, setStatus] = useContext(StatusContext) as StatusContextType;
   return (
     <div className={styles.container}>
       <Header />

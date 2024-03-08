@@ -1,7 +1,8 @@
+import { Results } from "@/types/Results";
 import Chart from "./Chart";
 
 interface Props {
-  result: number,
+  result: Results,
   setStatus: React.Dispatch<React.SetStateAction<string>>;
 }
 const Stats: React.FC<Props> = ({ result, setStatus }) => {
@@ -9,7 +10,7 @@ const Stats: React.FC<Props> = ({ result, setStatus }) => {
     <div>
       <p>Stats</p>
       <p>WPM: {result.wpm}</p>
-      <Chart chartData={result}></Chart>
+      <Chart chartData={result.speedHistory}></Chart>
       <button
         onClick={() => {
           setStatus('waiting');

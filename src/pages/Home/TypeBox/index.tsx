@@ -14,20 +14,20 @@ import { ConfigContext } from '@/context/ConfigContext';
 import { StatusContext } from '@/context/StatusContext';
 import { ConfigContextType } from '@/types/Config';
 import { StatusContextType } from '@/types/Status';
+import { Results, speedHistoryType } from '@/types/Results'; 
 
 type Props = {
-  setResult: (val: number) => void;
+  setResult: (results: Results) => void;
 };
 
 type HistoryObject = { [key: number]: { [key: number]: boolean | undefined } };
-type speedResults = { [key: number]: number }
 
 interface WordRefs {
   error: boolean;
   ref: RefObject<HTMLSpanElement>;
 }
 
-const speedResults: speedResults = {}
+const speedHistory: speedHistoryType = {}
 
 const TypeBox: React.FC<Props> = ({ setResult }) => {
   const [config] = useContext(ConfigContext) as ConfigContextType | null;
@@ -106,11 +106,11 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
         setLiveWPM(wpm);
         
         if (newTimer > config.time) {
-          setResult({wpm: Math.round(calculateWPM(prevTimer)), speedHistory: Object.values(speedResults)});
+          setResult({wpm: Math.round(calculateWPM(prevTimer)), speedHistory: Object.values(speedHistory)});
           clearInterval(timeOut);
           finish();
         }
-        speedResults[newTimer] = wpm
+        speedHistory[newTimer] = wpm
         return newTimer;
       });
     }, 1000);
