@@ -1,0 +1,7 @@
+.wrapper{
+  width: 90vw;
+}
+.chartContainer{
+  min-width: 200px;
+  height: 200px;
+}

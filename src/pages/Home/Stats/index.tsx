@@ -1,16 +1,19 @@
-import { Results } from "@/types/Results";
-import Chart from "./Chart";
+import { Results } from '@/types/Results';
+import Chart from './Chart';
+import styles from './Stats.module.css';
 
 interface Props {
-  result: Results,
+  result: Results;
   setStatus: React.Dispatch<React.SetStateAction<string>>;
 }
 const Stats: React.FC<Props> = ({ result, setStatus }) => {
   return (
-    <div>
+    <div className={styles.wrapper}>
       <p>Stats</p>
       <p>WPM: {result.wpm}</p>
-      <Chart chartData={result.speedHistory}></Chart>
+      <div className={styles.chartContainer}>
+        <Chart chartData={result.speedHistory}></Chart>
+      </div>
       <button
         onClick={() => {
           setStatus('waiting');
@@ -20,6 +23,6 @@ const Stats: React.FC<Props> = ({ result, setStatus }) => {
       </button>
     </div>
   );
-}
+};
 
 export default Stats;
