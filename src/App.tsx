@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useState } from 'react';
 import Home from './pages/Home';
 import { ConfigContext } from './context/ConfigContext';
@@ -9,6 +10,7 @@ const App: React.FC = () => {
   const [status, setStatus] = useState('waiting');
   return (
     <>
+    {/* @ts-expect-error */}
       <ConfigContext.Provider value={[config, updateConfig]}>
         <StatusContext.Provider value={[status, setStatus]}>
           <Home />

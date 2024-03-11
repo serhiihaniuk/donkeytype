@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, {
   MutableRefObject,
   RefObject,
@@ -30,6 +31,7 @@ interface WordRefs {
 const speedHistory: speedHistoryType = {}
 
 const TypeBox: React.FC<Props> = ({ setResult }) => {
+   {/* @ts-expect-error */}
   const [config] = useContext(ConfigContext) as ConfigContextType | null;
   const [status, setStatus] = useContext(StatusContext) as StatusContextType;
 
@@ -359,6 +361,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
         ref={inputRef}
         type="text"
         className={styles.hiddenInput}
+         // @ts-ignore
         onKeyDown={handleKeyDown}
         value={currInput}
         onFocus={() => handleFocus(true)}

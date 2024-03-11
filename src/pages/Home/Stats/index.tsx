@@ -30,6 +30,7 @@ const Stats: React.FC<Props> = ({ result, setStatus }) => {
       <div className={styles.chartContainer}>
         <Chart chartData={result.speedHistory}></Chart>
       </div>
+      <p>Press TAB to restart</p>
     </div>
   );
 };
