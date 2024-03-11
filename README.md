@@ -1,1 +1,1 @@
-Typing test app
+Typing test app inspirated by MonkeyType.com
