@@ -13,51 +13,87 @@ import styles from './TypeBox.module.css';
 import CapsLockPopup from './CapsLockPopup';
 import { ConfigContext } from '@/context/ConfigContext';
 import { StatusContext } from '@/context/StatusContext';
-import { ConfigContextType } from '@/types/Config';
+import { Config, ConfigContextType } from '@/types/Config';
 import { StatusContextType } from '@/types/Status';
-import { Results, speedHistoryType } from '@/types/Results'; 
+import { Results, speedHistoryType } from '@/types/Results';
 
-type Props = {
-  setResult: (results: Results) => void;
-};
-
-type HistoryObject = { [key: number]: { [key: number]: boolean | undefined } };
+type HistoryObject = { [key: string]: { [key: string]: boolean | null } };
 
 interface WordRefs {
   error: boolean;
   ref: RefObject<HTMLSpanElement>;
 }
 
-const speedHistory: speedHistoryType = {}
+const speedHistory: speedHistoryType = {};
+
+const calculateWPM = (t: number) => {
+  const chars = document.querySelectorAll('.correct-char').length;
+  const wpm = ((chars / t) * 60) / 5;
+
+  return wpm;
+};
+
+const generateObject = (words: string[]) => {
+  const result: HistoryObject = {};
+  words.forEach((_: string, i: number) => {
+    result[i] = {};
+  });
+  return result;
+};
+
+const generateWordsSet = (words: string[], config: Config) => {
+  let res = [...words].sort(() => Math.random() - 0.5);
+  if (config.capitals) {
+    res = res.map((word) =>
+      Math.random() < 0.35 // probability
+        ? word.charAt(0).toUpperCase() + word.slice(1)
+        : word
+    );
+  }
+  if (config.numbers) {
+    for (let i = 0; i < words.length / 4; i++) {
+      const position = Math.floor(Math.random() * words.length);
+      const randomNumber = Math.floor(Math.random() * (i % 2 == 0 ? 99 : 9999));
+
+      res.splice(position, 1, randomNumber.toString());
+    }
+  }
+  return res;
+};
+
+const countCharCorrectness = (history: HistoryObject) => {
+  const nonEmptyObjs = Object.keys(history).filter(
+    (key) => Object.keys(history[key]).length > 0
+  );
+
+  let correctCount = 0;
+  let errorCount = 0;
+  let skippedCount = 0;
+
+  for (const key of nonEmptyObjs) {
+    const word = history[key];
+    const keys = Object.keys(word);
+    const correct = keys.filter((key) => word[key] === true).length;
+    const error = keys.filter((key) => word[key] === false).length;
+    const skipped = keys.filter((key) => word[key] === null).length;
+
+    correctCount += correct;
+    errorCount += error;
+    skippedCount += skipped;
+  }
+  return { correctCount, errorCount, skippedCount };
+};
+
+type Props = {
+  setResult: (results: Results) => void;
+};
 
 const TypeBox: React.FC<Props> = ({ setResult }) => {
-   {/* @ts-expect-error */}
-  const [config] = useContext(ConfigContext) as ConfigContextType | null;
+  {/* @ts-expect-error */}
+  const [config] = useContext(ConfigContext) as ConfigContextType;
   const [status, setStatus] = useContext(StatusContext) as StatusContextType;
 
-  const generateWordsSet = (words: string[]) => {
-    let res = [...words].sort(() => Math.random() - 0.5);
-    if (config.capitals) {
-      res = res.map((word) =>
-        Math.random() < 0.35 // probability
-          ? word.charAt(0).toUpperCase() + word.slice(1)
-          : word
-      );
-    }
-    if (config.numbers) {
-      for (let i = 0; i < words.length/4; i++) {
-        const position = Math.floor(Math.random() * words.length);
-        const randomNumber = Math.floor(
-          Math.random() * (i % 2 == 0 ? 99 : 9999)
-        );
-
-        res.splice(position, 1, randomNumber.toString());
-      }
-    }
-    return res;
-  };
-
-  const wordsArr = useMemo(() => generateWordsSet(wordsData), []);
+  const wordsArr = useMemo(() => generateWordsSet(wordsData, config), []);
   const [words, setWords] = useState(wordsArr);
   const wordSpanRefs: WordRefs[] = useMemo(
     () =>
@@ -74,28 +110,13 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   const [currWordIndex, setCurrWordIndex] = useState(0);
   const [currCharIndex, setCurrCharIndex] = useState(-1);
 
-  const generateObject = () => {
-    const result: HistoryObject = {};
-    words.forEach((_: string, i: number) => {
-      result[i] = {};
-    });
-    return result;
-  };
-
   const [capsLocked, setCapsLocked] = useState(false);
 
-  const [history, setHistory] = useState<HistoryObject>(generateObject);
+  const [history, setHistory] = useState<HistoryObject>(generateObject(words));
   const [timer, setTimer] = useState(0);
   const intervalRef: { current: NodeJS.Timeout | null } = useRef(null);
 
   const [liveWPM, setLiveWPM] = useState(0);
-
-  const calculateWPM = (t: number) => {
-    const chars = document.querySelectorAll('.correct-char').length;
-    const wpm = ((chars / t) * 60) / 5;
-
-    return wpm;
-  };
 
   const start = () => {
     inputRef.current?.focus();
@@ -106,13 +127,17 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
         const newTimer = prevTimer + 1;
         const wpm = Math.round(calculateWPM(newTimer));
         setLiveWPM(wpm);
-        
+
         if (newTimer > config.time) {
-          setResult({wpm: Math.round(calculateWPM(prevTimer)), speedHistory: Object.values(speedHistory)});
+          setResult({
+            wpm: Math.round(calculateWPM(prevTimer)),
+            speedHistory: Object.values(speedHistory),
+            charCorrectness: countCharCorrectness(history),
+          });
           clearInterval(timeOut);
           finish();
         }
-        speedHistory[newTimer] = wpm
+        speedHistory[newTimer] = wpm;
         return newTimer;
       });
     }, 1000);
@@ -135,8 +160,8 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     setCurrWordIndex(0);
     setInputWordsHistory({});
     setStatus('waiting');
-    setHistory(generateObject);
-    setWords(generateWordsSet(wordsData));
+    setHistory(generateObject(words));
+    setWords(generateWordsSet(wordsData, config));
   };
 
   const [currChar, setCurrChar] = useState('');
@@ -150,7 +175,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     }
   };
   useEffect(() => {
-    setWords(generateWordsSet(wordsData));
+    setWords(generateWordsSet(wordsData, config));
   }, [config]);
 
   useEffect(() => {
@@ -166,7 +191,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     for (const wordIdx in history) {
       if (
         Object.values(history[wordIdx]).some(
-          (value) => value === false || value === undefined
+          (value) => value === false || value === null
         ) ||
         inputWordsHistory[Number(wordIdx)]?.length >
           words[Number(wordIdx)].length
@@ -279,7 +304,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
       }
     } else {
       if (wordIdx < currWordIndex) {
-        history[wordIdx][charIdx] = undefined;
+        history[wordIdx][charIdx] = null;
       }
     }
     if (wordIdx === currWordIndex) {
@@ -324,7 +349,6 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
       });
     }
   };
-
   return (
     <div className={styles.container}>
       <div
@@ -361,7 +385,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
         ref={inputRef}
         type="text"
         className={styles.hiddenInput}
-         // @ts-ignore
+        // @ts-ignore
         onKeyDown={handleKeyDown}
         value={currInput}
         onFocus={() => handleFocus(true)}
@@ -381,4 +405,3 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
 };
 
 export default TypeBox;
- 
