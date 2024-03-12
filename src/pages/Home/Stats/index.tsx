@@ -7,6 +7,7 @@ interface Props {
   result: Results;
   setStatus: React.Dispatch<React.SetStateAction<string>>;
 }
+
 const Stats: React.FC<Props> = ({ result, setStatus }) => {
   useEffect(() => {
     const handleTabPress = (event: KeyboardEvent) => {
@@ -29,6 +30,10 @@ const Stats: React.FC<Props> = ({ result, setStatus }) => {
       <p>WPM: {result.wpm}</p>
       <div className={styles.chartContainer}>
         <Chart chartData={result.speedHistory}></Chart>
+      </div>
+      <div>
+        <p>characters</p>
+        <span>{result.charCorrectness.correctCount}/{result.charCorrectness.errorCount}/{result.charCorrectness.skippedCount}</span>
       </div>
       <p>Press TAB to restart</p>
     </div>
