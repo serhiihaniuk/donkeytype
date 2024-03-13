@@ -1,7 +1,43 @@
 .wrapper{
-  width: 90vw;
+  width: 100%;
 }
-.chartContainer{
+.results{
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: auto 1fr;
+  grid-template-areas: "mainstats chart"
+                        ". substats";
+
+}
+.chart{
   min-width: 200px;
   height: 200px;
+}
+.mainstats{
+  grid-area: mainstats;
+}
+.mainstats p {
+  color: #446ad5;
+  font-size: 25px;
+}
+.mainstats span {
+  color: #f2ce83;
+  font-size: 50px;
+  margin-bottom: 5px;
+}
+.substats{
+  display: grid;
+  grid-area: substats;
+  justify-content: center;
+}
+.substatsItem{
+  width: 200px;
+}
+.substats p{
+  color: #446ad5;
+  font-size: 18px;
+}
+.substats span{
+  color: #f2ce83;
+  font-size: 30px;
 }

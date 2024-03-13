@@ -84,6 +84,8 @@ const countCharCorrectness = (history: HistoryObject) => {
   return { correctCount, errorCount, skippedCount };
 };
 
+let accuracy = {correct: 0, incorrect: 0}
+
 type Props = {
   setResult: (results: Results) => void;
 };
@@ -120,6 +122,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
 
   const start = () => {
     inputRef.current?.focus();
+    accuracy = {correct: 0, incorrect: 0}
     setStatus('started');
 
     const timeOut = setInterval(() => {
@@ -133,6 +136,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
             wpm: Math.round(calculateWPM(prevTimer)),
             speedHistory: Object.values(speedHistory),
             charCorrectness: countCharCorrectness(history),
+            accuracy,
           });
           clearInterval(timeOut);
           finish();
@@ -169,6 +173,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   const [inputWordsHistory, setInputWordsHistory] = useState<{
     [key: string]: string;
   }>({});
+
   const handleInput = () => {
     if (status === 'waiting') {
       start();
@@ -297,9 +302,11 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     if (wordIdx === currWordIndex && charIdx === currCharIndex && currChar) {
       if (char === currChar) {
         history[wordIdx][charIdx] = true;
+        accuracy.correct++
         return 'correct-char';
       } else {
         history[wordIdx][charIdx] = false;
+        accuracy.incorrect++
         return 'error-char';
       }
     } else {
@@ -313,7 +320,6 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
       }
     }
   };
-
   const getWordClassName = (wordIdx: number) => {
     const cls = ['word'];
     if (currWordIndex === wordIdx) {

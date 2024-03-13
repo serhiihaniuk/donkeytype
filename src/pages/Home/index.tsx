@@ -9,10 +9,15 @@ import { Results } from '@/types/Results';
 import { StatusContextType } from '@/types/Status';
 
 export default function Home() {
-  const [result, setResult] = useState<Results>({wpm: 0, speedHistory: [], charCorrectness: {}});
+  const [result, setResult] = useState<Results>({
+    wpm: 0,
+    speedHistory: [],
+    charCorrectness: {},
+    accuracy: { correct: 0, incorrect: 0 },
+  });
   const [status, setStatus] = useContext(StatusContext) as StatusContextType;
   return (
-    <div className={styles.container}>
+    <div className={styles.wrapper}>
       <Header />
       {status !== 'finished' ? (
         <>

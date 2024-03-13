@@ -1,8 +1,10 @@
 * {
   box-sizing: border-box;
 }
-.container{
-  width: 100%;
+.wrapper{
+  max-width: 1250px;
+  padding: 10px 32px;
+  margin: 0 auto;
   overflow: hidden;
   display: flex;
   flex-direction: column;
