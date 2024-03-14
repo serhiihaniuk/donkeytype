@@ -1,7 +1,8 @@
 export interface Config {
   time: number,
   capitals: boolean,
-  numbers: boolean
+  numbers: boolean,
+  punctuation: boolean
 }
 export interface ConfigField {
   [key: string]: number | string;

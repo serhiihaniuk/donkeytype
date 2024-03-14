@@ -33,10 +33,10 @@ const Stats: React.FC<Props> = ({ result, setStatus }) => {
     <div className={styles.wrapper}>
       <div className={styles.results}>
         <div className={styles.mainstats}>
-          <p className={styles.title}>wpm</p>
-          <span className={styles.info}>{result.wpm}</span>
-          <p className={styles.title}>accuracy</p>
-          <span className={styles.info}>{calcAccuracy(result.accuracy)}%</span>
+          <p>wpm</p>
+          <span>{result.wpm}</span>
+          <p>accuracy</p>
+          <span>{calcAccuracy(result.accuracy)}%</span>
         </div>
 
         <div className={styles.chart}>
@@ -45,8 +45,8 @@ const Stats: React.FC<Props> = ({ result, setStatus }) => {
 
         <div className={styles.substats}>
           <div className={styles.substatsItem}>
-            <p className={styles.title}>characters</p>
-            <span className={styles.info}>
+            <p>characters</p>
+            <span>
               {result.charCorrectness.correctCount}/
               {result.charCorrectness.errorCount}/
               {result.charCorrectness.skippedCount}

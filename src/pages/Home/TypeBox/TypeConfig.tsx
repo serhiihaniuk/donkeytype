@@ -38,6 +38,13 @@ export default function TypeConfig({ isVisible }: Props) {
         </span>
         <span
           className={styles.configButton}
+          onClick={() => updateConfig({ punctuation: !config.punctuation })}
+          style={{ color: config.punctuation ? '#f2ce83' : 'inherit' }}
+        >
+          punctuation
+        </span>
+        <span
+          className={styles.configButton}
           onClick={() => updateConfig({ numbers: !config.numbers })}
           style={{ color: config.numbers ? '#f2ce83' : 'inherit' }}
         >

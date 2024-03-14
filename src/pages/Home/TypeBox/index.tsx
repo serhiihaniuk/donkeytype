@@ -58,6 +58,17 @@ const generateWordsSet = (words: string[], config: Config) => {
       res.splice(position, 1, randomNumber.toString());
     }
   }
+  if (config.punctuation) {
+    const punctuationMarks = [',', '.', ':'];
+    for (let i = 0; i < words.length / 3; i++) {
+      if (Math.random() < 0.5) {
+        const punctuation =
+          punctuationMarks[Math.floor(Math.random() * punctuationMarks.length)];
+        res[i] += punctuation;
+      }
+    }
+  }
+
   return res;
 };
 
@@ -84,7 +95,7 @@ const countCharCorrectness = (history: HistoryObject) => {
   return { correctCount, errorCount, skippedCount };
 };
 
-let accuracy = {correct: 0, incorrect: 0}
+let accuracy = { correct: 0, incorrect: 0 };
 
 type Props = {
   setResult: (results: Results) => void;
@@ -122,7 +133,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
 
   const start = () => {
     inputRef.current?.focus();
-    accuracy = {correct: 0, incorrect: 0}
+    accuracy = { correct: 0, incorrect: 0 };
     setStatus('started');
 
     const timeOut = setInterval(() => {
@@ -302,11 +313,11 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     if (wordIdx === currWordIndex && charIdx === currCharIndex && currChar) {
       if (char === currChar) {
         history[wordIdx][charIdx] = true;
-        accuracy.correct++
+        accuracy.correct++;
         return 'correct-char';
       } else {
         history[wordIdx][charIdx] = false;
-        accuracy.incorrect++
+        accuracy.incorrect++;
         return 'error-char';
       }
     } else {

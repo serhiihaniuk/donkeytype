@@ -1,4 +1,4 @@
-export type speedHistoryType = {[key: string]: number}
+export type speedHistoryType = Record<string, number>
 export type Accuracy = {correct: number, incorrect: number}
 export type Results = {
   wpm: number,
