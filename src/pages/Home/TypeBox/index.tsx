@@ -16,6 +16,8 @@ import { StatusContext } from '@/context/StatusContext';
 import { Config, ConfigContextType } from '@/types/Config';
 import { StatusContextType } from '@/types/Status';
 import { Results, speedHistoryType } from '@/types/Results';
+import contractionWords from '@/data/contractionWords'
+import randomIndex from '@/utils/randomIndex'
 
 type HistoryObject = { [key: string]: { [key: string]: boolean | null } };
 
@@ -23,6 +25,9 @@ interface WordRefs {
   error: boolean;
   ref: RefObject<HTMLSpanElement>;
 }
+
+const punctuationMarks = [',', '.', ':', '!'];
+const punctuationMarksToAllow = punctuationMarks.concat(["'"])
 
 const speedHistory: speedHistoryType = {};
 
@@ -52,19 +57,23 @@ const generateWordsSet = (words: string[], config: Config) => {
   }
   if (config.numbers) {
     for (let i = 0; i < words.length / 4; i++) {
-      const position = Math.floor(Math.random() * words.length);
       const randomNumber = Math.floor(Math.random() * (i % 2 == 0 ? 99 : 9999));
-
-      res.splice(position, 1, randomNumber.toString());
+      res.splice(randomIndex(words), 1, randomNumber.toString());
     }
   }
   if (config.punctuation) {
-    const punctuationMarks = [',', '.', ':'];
     for (let i = 0; i < words.length / 3; i++) {
-      if (Math.random() < 0.5) {
-        const punctuation =
-          punctuationMarks[Math.floor(Math.random() * punctuationMarks.length)];
-        res[i] += punctuation;
+      if (Math.random() < 0.2) {             // add punctuation
+        res[i] += punctuationMarks[randomIndex(punctuationMarks)]; 
+      }
+      if (Math.random() < 0.2) {             // add contraction words
+        res[randomIndex(words)] = contractionWords[randomIndex(contractionWords)];
+      }
+    }
+    for (let i = 0; i < words.length / 4; i++) {
+      if (Math.random() < 0.1) {              // enclose some words in ''
+          const wordIndex = randomIndex(words);
+          res[wordIndex] = `'${words[wordIndex]}'`;
       }
     }
   }
@@ -231,7 +240,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
 
   const handleKeyDown = (e: KeyboardEvent) => {
     const key = e.key;
-    const keyCode = e.keyCode;
+    const keyCode = e.keyCode 
     setCapsLocked(e.getModifierState('CapsLock'));
 
     //tab
@@ -251,14 +260,14 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
         setCurrInput(inputWordsHistory[currWordIndex - 1]);
         return;
       }
-
+      
       if (currCharIndex < 0) {
         return;
       }
-
+      
       setCurrCharIndex(currCharIndex - 1);
       setCurrChar('');
-
+      
       delete history[currWordIndex][currCharIndex];
       return;
     }
@@ -274,11 +283,13 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     if (
       !(keyCode >= 48 && keyCode <= 57) && // Numbers
       !(keyCode >= 65 && keyCode <= 90) && // Uppercase letters
-      !(keyCode >= 97 && keyCode <= 122) // Lowercase letters
+      !(keyCode >= 97 && keyCode <= 122) && // Lowercase letters
+      !(punctuationMarksToAllow.includes(key))
     ) {
       e.preventDefault();
       return;
     }
+   
 
     setCurrCharIndex(currCharIndex + 1);
     setCurrChar(key);
