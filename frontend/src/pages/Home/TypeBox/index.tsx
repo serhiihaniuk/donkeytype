@@ -64,7 +64,7 @@ const generateWordsSet = (words: string[], config: Config) => {
   if (config.punctuation) {
     for (let i = 0; i < words.length / 3; i++) {
       if (Math.random() < 0.2) {             // add punctuation
-        res[i] += punctuationMarks[randomIndex(punctuationMarks)]; 
+        res[randomIndex(words)] += punctuationMarks[randomIndex(punctuationMarks)]; 
       }
       if (Math.random() < 0.2) {             // add contraction words
         res[randomIndex(words)] = contractionWords[randomIndex(contractionWords)];

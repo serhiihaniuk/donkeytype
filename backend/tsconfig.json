@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "./src/**/*.ts"
+, "src/controllers/user.controller.js"  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
