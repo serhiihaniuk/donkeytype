@@ -1,11 +1,10 @@
-const { serial, text, pgTable } = require("drizzle-orm/pg-core");
-const users = pgTable("users", {
+import { serial, text, pgTable } from "drizzle-orm/pg-core";
+
+export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   name: text("name"),
-  email: text("email"),
+  email: text("email").unique(),
   password: text("password")
 });
 
-module.exports = {
-  users: users
-};
+
