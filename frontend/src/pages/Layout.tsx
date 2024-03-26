@@ -1,14 +1,12 @@
 import Header from '@/components/Header'
+import { Outlet } from 'react-router-dom'
 
-type Props = {
-  children: JSX.Element | JSX.Element[]
-}
 
-export default function Layout({ children }: Props) {
+export default function Layout() {
   return (
     <>
       <Header />
-      {children}
+      <Outlet />
     </>
   )
 }

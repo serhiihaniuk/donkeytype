@@ -3,6 +3,8 @@
   margin-bottom: 100px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
 }
 .logo{
   width: 50px;
@@ -12,4 +14,12 @@
   font-size: 20px;
   margin-left: 10px;
   font-weight: bold;
+}
+.logoWrapper{
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.headerButton {
+  cursor: pointer
 }
