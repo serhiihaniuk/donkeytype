@@ -1,6 +1,5 @@
 import { useContext, useState } from 'react';
 import TypeBox from './TypeBox';
-import Header from '@/components/Header';
 import styles from './Home.module.css';
 import Stats from './Stats';
 import TypeConfig from './TypeBox/TypeConfig';
@@ -18,7 +17,6 @@ export default function Home() {
   const [status, setStatus] = useContext(StatusContext) as StatusContextType;
   return (
     <div className={styles.wrapper}>
-      <Header />
       {status !== 'finished' ? (
         <>
           <TypeConfig isVisible={status === 'waiting'} />
@@ -26,7 +24,7 @@ export default function Home() {
         </>
       ) : (
         <Stats result={result} setStatus={setStatus} />
-      )}
+      )} 
     </div>
   );
 }
