@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1711120004453,
+      "tag": "0000_legal_vin_gonzales",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1711121719574,
+      "tag": "0001_watery_magdalene",
+      "breakpoints": true
+    }
+  ]
+}

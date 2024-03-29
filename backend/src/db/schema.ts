@@ -1,10 +1,17 @@
-import { serial, text, pgTable } from "drizzle-orm/pg-core";
+import { serial, text, pgTable, integer } from "drizzle-orm/pg-core";
 
-export const users = pgTable("users", {
+export const usersTable = pgTable("users", {
   id: serial("id").primaryKey(),
-  name: text("name"),
-  email: text("email").unique(),
-  password: text("password")
+  username: text("username").notNull(),
+  email: text("email").unique().notNull(),
+  password: text("password").notNull()
 });
+
+export const refreshSessions = pgTable("refreshSessions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => usersTable.id, { onDelete: 'cascade' }),
+  refreshToken: text("refresh_token").notNull(),
+  fingerPrint: text("finger_print").notNull()
+})
 
 

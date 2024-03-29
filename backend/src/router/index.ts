@@ -1,11 +1,12 @@
 //@ts-nocheck
 import { Router } from 'express';
-import { registerUser, loginUser, logoutUser, getUsers } from '../controllers/user.controller';
-export const router = Router()
+import UserController from '../controllers/userController';
+export const authRouter = Router()
 
-router.get('/registration', registerUser);
-router.post('/login', loginUser);
-router.post('/logout', logoutUser);
-// router.get('/activate/:link', userController.activate);
-router.get('/users', getUsers);
+authRouter.post('/sign-up', UserController.signUp);
+authRouter.post('/sign-in', UserController.signIn);
+authRouter.post('/logout', UserController.logOut);
+authRouter.post('/refresh', UserController.refresh);
+
+
 
