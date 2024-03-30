@@ -11,6 +11,8 @@ import {
   Routes,
 } from "react-router-dom";
 import Login from './pages/Login';
+import AuthProvider from './context/AuthContext';
+import Dashboard from './pages/Dashboard';
 
 const App: React.FC = () => {
   const [config, updateConfig] = UseConfig('config');
@@ -20,14 +22,17 @@ const App: React.FC = () => {
     {/* @ts-expect-error */}
       <ConfigContext.Provider value={[config, updateConfig]}>
         <StatusContext.Provider value={[status, setStatus]}>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Layout />}>
-                <Route index element={<Home />} />
-                <Route path="login" element={<Login />} />
-              </Route>
-            </Routes>
-          </BrowserRouter>
+          <AuthProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<Home />} />
+                  <Route path="login" element={<Login />} />
+                  <Route path="dashboard" element={<Dashboard/>}/>
+                </Route>
+              </Routes>
+            </BrowserRouter>
+          </AuthProvider>
         </StatusContext.Provider>
       </ConfigContext.Provider>
     </>

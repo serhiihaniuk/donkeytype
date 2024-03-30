@@ -1,30 +1,41 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import axios from 'axios';
+import { AuthContext } from '@/context/AuthContext';
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
-
-  const api = axios.create({
-    baseURL: 'http://localhost:3000/api/v1/',
-    withCredentials: true
-  })
+  const nagigate = useNavigate()
+  const { handleSignUp, handleSignIn } = useContext(AuthContext)
 
   const handleSend = async () => {
     const data = {
       username: document.getElementById('name').value,
-      email: document.getElementById('email').value,
-      password: document.getElementById('password').value
+      email: document.getElementById('remail').value,
+      password: document.getElementById('rpassword').value
     }
-    api.post("/sign-up", data)
-    console.log(data)
+    handleSignUp(data)
+    nagigate('/')
+  }
+  const handleLogin = async () => {
+    const data = {
+      email: document.getElementById('lemail').value,
+      password: document.getElementById('lpassword').value
+    }
+    handleSignIn(data)
+    nagigate('/')
   }
 
   return (
     <>
         <input id='name' type="text" placeholder='name' />
-        <input id='email' type="text" placeholder='email' />
-        <input id='password' type="text" placeholder='password' />
-        <button onClick={handleSend}>Send</button>
+        <input id='remail' type="text" placeholder='email' />
+        <input id='rpassword' type="text" placeholder='password' />
+        <button onClick={handleSend}>register</button>
+        <input id='lemail' type="text" placeholder='login email' />
+        <input id='lpassword' type="text" placeholder='login password' />
+        <button onClick={handleLogin}>Login</button>
+
     </>
   )
 }
