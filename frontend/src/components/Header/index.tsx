@@ -23,15 +23,15 @@ export default function Header() {
         {isUserLogged ?
           <>
             <span className={styles.headerButton} onClick={() => navigate('/dashboard')}>
-              <img src={user} alt="User" className={styles.user}/>
+              <img src={user} alt="User" className={styles.headerButton}/>
             </span>
             <span className={styles.headerButton} onClick={handleLogoutClick}>
-              <img src={logout} alt="logout" className={styles.logout}/>
+              <img src={logout} alt="logout" className={styles.headerButton}/>
             </span>
           </>
           :
           <span className={styles.headerButton} onClick={() => navigate('/login')}>
-              <img src={user} alt="User" className={styles.user}/>
+              <img src={user} alt="User" className={styles.headerButton}/>
           </span>
         }
       </div>

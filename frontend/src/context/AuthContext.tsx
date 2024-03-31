@@ -2,6 +2,7 @@ import { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import inMemoryJWT from '@/services/inMemoryJWTService';
 import config from '../../../config'
+import { UserSignInType, UserSignUpType } from '@/types/User';
 
 export const AuthClient = axios.create({
   baseURL: `${config.API_URL}/auth`,
@@ -11,6 +12,14 @@ export const ResourceClient = axios.create({
   baseURL: `${config.API_URL}/resource`,
   withCredentials: true
 })
+
+interface AuthContextType {
+  handleSignUp: (data: UserSignUpType) => void;
+  handleSignIn: (data: UserSignInType) => void;
+  handleLogOut: () => void;
+  isUserLogged: boolean;
+  isAppReady: boolean;
+}
 
 ResourceClient.interceptors.request.use(
   (config) => {
@@ -26,21 +35,21 @@ ResourceClient.interceptors.request.use(
   }
 )
 
-export const AuthContext = createContext({});
+export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-const AuthProvider = ({ children }) => {
-  const [data, setData] = useState();
+const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+  // const [data, setData] = useState();
   const [isUserLogged, setIsUserLogged] = useState(false)
   const [isAppReady, setIsAppReady] = useState(false)
-  const handleFetchProtected = () => {
-    ResourceClient.get('/protected')
-    .then((res)=> {
-      setData(res.data)
-    })
-    .catch(e => {
-      console.log(e)
-    })
-    }
+  // const handleFetchProtected = () => {
+  //   ResourceClient.get('/protected')
+  //   .then((res)=> {
+  //     setData(res.data)
+  //   })
+  //   .catch(e => {
+  //     console.log(e)
+  //   })
+  //   }
   
 
   const handleLogOut = () => {
@@ -51,7 +60,7 @@ const AuthProvider = ({ children }) => {
     .catch(e => console.log(e))
   };
 
-  const handleSignUp = (data) => {
+  const handleSignUp = (data: UserSignUpType) => {
     AuthClient
       .post('/sign-up', data)
       .then((res) => {
@@ -66,7 +75,7 @@ const AuthProvider = ({ children }) => {
       });
   };
 
-  const handleSignIn = (data) => {
+  const handleSignIn = (data: UserSignInType) => {
     AuthClient
       .post('/sign-in', data)
       .then((res) => {
@@ -98,13 +107,11 @@ const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
-        data,
-        handleFetchProtected,
         handleSignUp,
         handleSignIn,
         handleLogOut,
         isUserLogged, 
-        
+        isAppReady
       }}
     >
       {children}
