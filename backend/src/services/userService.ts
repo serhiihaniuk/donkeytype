@@ -9,7 +9,7 @@ class userService {
 
   static async signUp({username, email, password, fingerprint}) {
     const userData = await UserRepository.getUserByEmail(email)
-    if(userData.length >= 1) {
+    if(userData) {
       throw new Conflict("Email is already taken")
     }
 

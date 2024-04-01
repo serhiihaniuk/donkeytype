@@ -1,4 +1,5 @@
 import { AuthClient } from '@/context/AuthContext';
+import config from '../../../config';
 
 const inMemoryJWTService = () => {
   let inMemoryJWT: string | null = null;
@@ -28,9 +29,11 @@ const inMemoryJWTService = () => {
     inMemoryJWT = token;
     refreshToken(tokenExpiration);
   };
+
   const deleteToken = () => {
     inMemoryJWT = null;
     abortRefreshToken();
+    localStorage.setItem(config.LOGOUT_STORAGE_KEY, `${Date.now()}`)
   };
 
   return { getToken, setToken, deleteToken };

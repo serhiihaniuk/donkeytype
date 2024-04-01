@@ -7,7 +7,7 @@ class UserRepository {
 
   static async getUserByEmail(email: string) {
     const response = await db.select().from(usersTable).where(eq(usersTable.email, email));
-    if(!response){
+    if(!response.length){
       return null
     }
     return response[0]

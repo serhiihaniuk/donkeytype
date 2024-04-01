@@ -104,6 +104,20 @@ const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
       })
   })
 
+  useEffect(()=>{
+    const handlePersistedLogOut = (event: StorageEvent) => {
+      if(event.key === config.LOGOUT_STORAGE_KEY){
+        inMemoryJWT.deleteToken()
+        setIsUserLogged(false)
+      }
+    }
+    window.addEventListener('storage', handlePersistedLogOut)
+
+    return () => {
+      window.removeEventListener('storage', handlePersistedLogOut)
+    }
+  })
+
   return (
     <AuthContext.Provider
       value={{
