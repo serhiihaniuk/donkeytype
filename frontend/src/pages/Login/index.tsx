@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 import { AuthContext } from '@/context/AuthContext';
 import { useContext } from 'react';
@@ -39,3 +39,16 @@ export default function Login() {
     </>
   )
 }
+
+// import RegisterForm from './RegisterForm';
+
+// export default function Login() {
+
+
+
+//   return (
+//     <>
+//       <RegisterForm />
+//     </>
+//   )
+// }
