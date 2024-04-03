@@ -5,8 +5,8 @@ import { db } from '../db/setup';
 
 class UserRepository {
 
-  static async getUserByEmail(email: string) {
-    const response = await db.select().from(usersTable).where(eq(usersTable.email, email));
+  static async getUserByUsername(username: string) {
+    const response = await db.select().from(usersTable).where(eq(usersTable.username, username));
     if(!response.length){
       return null
     }
