@@ -2,7 +2,7 @@ export type User = {
   id: number;
   username: string;
   email: string;
-  password: boolean;
+  password: string;
 };
 export type UserSignUpType = Omit<User, 'id'>
 export type UserSignInType = Omit<UserSignUpType, 'username'>

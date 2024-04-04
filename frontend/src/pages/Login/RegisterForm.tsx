@@ -1,58 +1,89 @@
-import { AuthContext } from '@/context/AuthContext';
 import { UserSignUpType } from '@/types/User';
-import { useContext } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import styles from './Form.module.css';
+import { checkUsername } from '@/services/userServices';
 
 export default function RegisterForm() {
-  const nagigate = useNavigate();
-  const { getUserByEmail } = useContext(AuthContext);
 
   const {
     register,
+    watch,
     handleSubmit,
     formState: { errors },
   } = useForm<UserSignUpType>();
 
-  const onSubmit: SubmitHandler<UserSignUpType> = async (data: UserSignUpType) => {
-    const res = await getUserByEmail(data.email)
-    console.log(res);
- 
+  const onSubmit: SubmitHandler<UserSignUpType> = async (
+    data: UserSignUpType
+  ) => {
+    const isUsernameAvaliable = await checkUsername(data.username);
+    console.log(isUsernameAvaliable);
+    console.log(data);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.formContainer} noValidate>
-      <div className={styles.formControl}>
-        <input
-          {...register('username', { required: true })}
-          placeholder="username"
-        />
-      </div>
-      <div className={styles.formControl}>
-        <input
-          {...register('email', {
-            required: true,
+    <>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className={styles.formContainer}
+        noValidate
+      >
+        <div className={styles.formControl}>
+          <label htmlFor="username">Username</label>
+          <input id="username" {...register('username', { required: true })} />
+        </div>
 
-          })}
-          placeholder="email"
-        />
-        <p>{errors.email?.message}</p>
-      </div>
-      <div className={styles.formControl}>
-        <input
-          {...register('password', { 
-            required: true,
-            minLength: 6 || 'min length is 6'
-          })}
-          placeholder="password"
+        <div className={styles.formControl}>
+          <label htmlFor="email">Email</label>
+
+          <input
+            id="email"
+            {...register('email', {
+              required: true,
+              pattern: {
+                value:
+                  /^[\w-]+(\.[\w-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$/i,
+                message: 'Invalid email address',
+              },
+            })}
           />
-          <p>{errors.password?.message}</p>
-      </div>
+          <p>{errors.email?.message}</p>
+        </div>
 
-      <button>Register</button>
-    </form>
+        <div className={styles.formControl}>
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            {...register('password', {
+              required: 'Password is required',
+              minLength: {
+                value: 8,
+                message: 'Password must be at least 8 characters',
+              },
+            })}
+          />
+          {errors.password && <span>{errors.password.message}</span>}
+        </div>
 
-    /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
+        <div className={styles.formControl}>
+          <label htmlFor="confirmPassword">Confirm password</label>
+          <input
+            id="confirmPassword"
+            type="password"
+            {...register('confirmPassword', {
+              required: 'Please confirm your password',
+              validate: (value) =>
+                value === watch('password') || 'Passwords do not match',
+            })}
+          />
+          {errors.confirmPassword && (
+            <span>{errors.confirmPassword.message}</span>
+          )}
+        </div>
+
+        <button>Register</button>
+      </form>
+      <button onClick={() => console.log(errors)}>test </button>
+    </>
   );
 }
