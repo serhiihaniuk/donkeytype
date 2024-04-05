@@ -2,22 +2,46 @@ import { UserSignUpType } from '@/types/User';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import styles from './Form.module.css';
 import { checkUsername } from '@/services/userServices';
+import { useContext } from 'react';
+import { AuthContext } from '@/context/AuthContext';
+
+type UserInputType = UserSignUpType & {
+  confirmPassword: string;
+};
 
 export default function RegisterForm() {
-
+  const { handleSignUp } = useContext(AuthContext);
   const {
     register,
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm<UserSignUpType>();
+  } = useForm<UserInputType>();
 
-  const onSubmit: SubmitHandler<UserSignUpType> = async (
-    data: UserSignUpType
+  const onSubmit: SubmitHandler<UserInputType> = async (
+    data: UserInputType
   ) => {
-    const isUsernameAvaliable = await checkUsername(data.username);
-    console.log(isUsernameAvaliable);
-    console.log(data);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { confirmPassword, ...userData } = data;
+    try {
+      await handleSignUp(userData);
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        throw new Error('Email is already in use');
+      }
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const validateUsernameAvailability = async (value: string) => {
+    try {
+      const isUsernameAvailable = await checkUsername(value);
+      return isUsernameAvailable || 'Username is not available';
+    } catch (error) {
+      console.error('Error checking username availability:', error);
+      return 'Error checking username availability';
+    }
   };
 
   return (
@@ -29,7 +53,22 @@ export default function RegisterForm() {
       >
         <div className={styles.formControl}>
           <label htmlFor="username">Username</label>
-          <input id="username" {...register('username', { required: true })} />
+          <input
+            id="username"
+            {...register('username', {
+              required: true,
+              validate: validateUsernameAvailability,
+              minLength: {
+                value: 2,
+                message: 'Username must be at least 2 characters',
+              },
+              maxLength: {
+                value: 20,
+                message: 'Username must be max 20 characters',
+              },
+            })}
+          />
+          <p>{errors.username?.message}</p>
         </div>
 
         <div className={styles.formControl}>
