@@ -8,10 +8,6 @@ import { Conflict, Forbidden, Unauthorized } from '../utils/errors';
 class userService {
 
   static async signUp({username, email, password, fingerprint}) {
-    const userData = await UserRepository.getUserByEmail(email)
-    if(userData) {
-      throw new Conflict("Email is already taken")
-    }
 
     const hashedPassword = bcrypt.hashSync(password, 8)
 

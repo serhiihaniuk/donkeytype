@@ -12,6 +12,14 @@ class UserRepository {
     }
     return response[0]
   }
+  static async getUserByEmail(email: string) {
+    const response = await db.select().from(usersTable).where(eq(usersTable.email, email));
+    if(!response.length){
+      return null
+    }
+    return response[0]
+  }
+  
 
   static async createUser({username, email, hashedPassword}) {
     return db

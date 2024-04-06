@@ -2,8 +2,9 @@ import { UserSignUpType } from '@/types/User';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import styles from './Form.module.css';
 import { checkUsername } from '@/services/userServices';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { AuthContext } from '@/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 type UserInputType = UserSignUpType & {
   confirmPassword: string;
@@ -11,6 +12,7 @@ type UserInputType = UserSignUpType & {
 
 export default function RegisterForm() {
   const { handleSignUp } = useContext(AuthContext);
+  const navigate = useNavigate()
   const {
     register,
     watch,
@@ -18,19 +20,22 @@ export default function RegisterForm() {
     formState: { errors },
   } = useForm<UserInputType>();
 
+  const [isEmailInUse, setIsEmailInUse] = useState(false);
+
   const onSubmit: SubmitHandler<UserInputType> = async (
     data: UserInputType
   ) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, ...userData } = data;
-    try {
-      await handleSignUp(userData);
-    } catch (error) {
-      if (error.response && error.response.status === 409) {
-        throw new Error('Email is already in use');
-      }
-      console.error(error);
-      throw error;
+   
+    const res = await handleSignUp(userData)
+    if(res.message === 'Email is not avaliable'){
+      setIsEmailInUse(true)
+    } else {
+      setIsEmailInUse(false)
+    }
+    if(res.success){
+      navigate('/')
     }
   };
 
@@ -78,6 +83,7 @@ export default function RegisterForm() {
             id="email"
             {...register('email', {
               required: true,
+              onChange: ()=>setIsEmailInUse(false),
               pattern: {
                 value:
                   /^[\w-]+(\.[\w-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$/i,
@@ -86,6 +92,7 @@ export default function RegisterForm() {
             })}
           />
           <p>{errors.email?.message}</p>
+          {isEmailInUse && <p>Email is not avaliable</p>}
         </div>
 
         <div className={styles.formControl}>

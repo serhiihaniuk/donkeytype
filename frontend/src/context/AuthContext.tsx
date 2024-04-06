@@ -1,46 +1,51 @@
 import { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import inMemoryJWT from '@/services/inMemoryJWTService';
-import config from '../../../config'
+import config from '../../../config';
 import { UserSignInType, UserSignUpType } from '@/types/User';
 
 export const AuthClient = axios.create({
   baseURL: `${config.API_URL}/auth`,
-  withCredentials: true
-})
+  withCredentials: true,
+});
 export const ResourceClient = axios.create({
   baseURL: `${config.API_URL}/resource`,
-  withCredentials: true
-})
+  withCredentials: true,
+});
 
 interface AuthContextType {
-  handleSignUp: (data: UserSignUpType) => void;
+  handleSignUp: (data: UserSignUpType) => Promise<{ success: boolean, message: string }>;
   handleSignIn: (data: UserSignInType) => void;
   handleLogOut: () => void;
   isUserLogged: boolean;
   isAppReady: boolean;
 }
 
+
 ResourceClient.interceptors.request.use(
   (config) => {
     const accessToken = inMemoryJWT.getToken();
 
     if (accessToken) {
-      config.headers["Authorization"] = `Bearer ${accessToken}`
+      config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
     return config;
   },
   (error) => {
-    Promise.reject(error)
+    Promise.reject(error);
   }
-)
+);
 
-export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+export const AuthContext = createContext<AuthContextType>(
+  {} as AuthContextType
+);
 
-const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   // const [data, setData] = useState();
-  const [isUserLogged, setIsUserLogged] = useState(false)
-  const [isAppReady, setIsAppReady] = useState(false)
+  const [isUserLogged, setIsUserLogged] = useState(false);
+  const [isAppReady, setIsAppReady] = useState(false);
   // const handleFetchProtected = () => {
   //   ResourceClient.get('/protected')
   //   .then((res)=> {
@@ -50,37 +55,37 @@ const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
   //     console.log(e)
   //   })
   //   }
-  
 
   const handleLogOut = () => {
-    AuthClient.post("/logout").then(()=>{
-      inMemoryJWT.deleteToken()
-      setIsUserLogged(false)
-    })
-    .catch(e => console.log(e))
+    AuthClient.post('/logout')
+      .then(() => {
+        inMemoryJWT.deleteToken();
+        setIsUserLogged(false);
+      })
+      .catch((e) => console.log(e));
   };
 
   const handleSignUp = (data: UserSignUpType) => {
-    AuthClient
-      .post('/sign-up', data)
+    const response = AuthClient.post('/sign-up', data)
       .then((res) => {
         const { accessToken, accessTokenExpiration } = res.data;
-        setIsUserLogged(true)
-
+        setIsUserLogged(true);
         inMemoryJWT.setToken(accessToken, accessTokenExpiration);
+        return { success: true, message: '' };
       })
       .catch((error) => {
-        
-        console.error(error);
+        if (error.response.status === 409) {
+          return { success: false, message: 'Email is not avaliable' };
+        } else return { success: false, message: error.message };
       });
+    return response;
   };
 
   const handleSignIn = (data: UserSignInType) => {
-    AuthClient
-      .post('/sign-in', data)
+    AuthClient.post('/sign-in', data)
       .then((res) => {
         const { accessToken, accessTokenExpiration } = res.data;
-        setIsUserLogged(true)
+        setIsUserLogged(true);
 
         inMemoryJWT.setToken(accessToken, accessTokenExpiration);
       })
@@ -89,34 +94,34 @@ const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
       });
   };
 
-  useEffect(()=> {
-    AuthClient.post("/refresh")
-    .then((res) => {
-      const { accessToken, accessTokenExpiration } = res.data;
-      inMemoryJWT.setToken(accessToken, accessTokenExpiration)
-      
-      setIsAppReady(true)
-      setIsUserLogged(true)
-    })
-      .catch(()=>{
-        setIsAppReady(true)
-        setIsUserLogged(false)
-      })
-  })
+  useEffect(() => {
+    AuthClient.post('/refresh')
+      .then((res) => {
+        const { accessToken, accessTokenExpiration } = res.data;
+        inMemoryJWT.setToken(accessToken, accessTokenExpiration);
 
-  useEffect(()=>{
+        setIsAppReady(true);
+        setIsUserLogged(true);
+      })
+      .catch(() => {
+        setIsAppReady(true);
+        setIsUserLogged(false);
+      });
+  });
+
+  useEffect(() => {
     const handlePersistedLogOut = (event: StorageEvent) => {
-      if(event.key === config.LOGOUT_STORAGE_KEY){
-        inMemoryJWT.deleteToken()
-        setIsUserLogged(false)
+      if (event.key === config.LOGOUT_STORAGE_KEY) {
+        inMemoryJWT.deleteToken();
+        setIsUserLogged(false);
       }
-    }
-    window.addEventListener('storage', handlePersistedLogOut)
+    };
+    window.addEventListener('storage', handlePersistedLogOut);
 
     return () => {
-      window.removeEventListener('storage', handlePersistedLogOut)
-    }
-  })
+      window.removeEventListener('storage', handlePersistedLogOut);
+    };
+  });
 
   return (
     <AuthContext.Provider
@@ -124,8 +129,8 @@ const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
         handleSignUp,
         handleSignIn,
         handleLogOut,
-        isUserLogged, 
-        isAppReady
+        isUserLogged,
+        isAppReady,
       }}
     >
       {children}
