@@ -4,13 +4,15 @@ import { ConfigContext } from '@/context/ConfigContext';
 import { ConfigContextType } from '@/types/Config';
 
 type Props = {
-  isVisible: boolean
-}
+  isVisible: boolean;
+};
 
 export default function TypeConfig({ isVisible }: Props) {
-   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-   /* @ts-expect-error */
-  const [config, updateConfig] = useContext(ConfigContext) as ConfigContextType | null;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  /* @ts-expect-error */
+  const [config, updateConfig] = useContext(
+    ConfigContext
+  ) as ConfigContextType | null;
 
   const timeOptions = [15, 30, 60];
   return (
@@ -18,39 +20,37 @@ export default function TypeConfig({ isVisible }: Props) {
       className={styles.container}
       style={!isVisible ? { opacity: 0, pointerEvents: 'none' } : {}}
     >
-      <div className={styles.timeWrapper}>
-        {timeOptions.map((item, i) => (
-          <span
-            key={i}
-            className={styles.configButton}
-            onClick={() => updateConfig({ time: item })}
-            style={{ color: item === config.time ? '#f2ce83' : 'inherit' }}
-          >
-            {item}
-          </span>
-        ))}
+      {timeOptions.map((item, i) => (
         <span
+          key={i}
           className={styles.configButton}
-          onClick={() => updateConfig({ capitals: !config.capitals })}
-          style={{ color: config.capitals ? '#f2ce83' : 'inherit' }}
+          onClick={() => updateConfig({ time: item })}
+          style={{ color: item === config.time ? '#f2ce83' : 'inherit' }}
         >
-          capitals
+          {item}
         </span>
-        <span
-          className={styles.configButton}
-          onClick={() => updateConfig({ punctuation: !config.punctuation })}
-          style={{ color: config.punctuation ? '#f2ce83' : 'inherit' }}
-        >
-          punctuation
-        </span>
-        <span
-          className={styles.configButton}
-          onClick={() => updateConfig({ numbers: !config.numbers })}
-          style={{ color: config.numbers ? '#f2ce83' : 'inherit' }}
-        >
-          numbers
-        </span>
-      </div>
+      ))}
+      <span
+        className={styles.configButton}
+        onClick={() => updateConfig({ capitals: !config.capitals })}
+        style={{ color: config.capitals ? '#f2ce83' : 'inherit' }}
+      >
+        capitals
+      </span>
+      <span
+        className={styles.configButton}
+        onClick={() => updateConfig({ punctuation: !config.punctuation })}
+        style={{ color: config.punctuation ? '#f2ce83' : 'inherit' }}
+      >
+        punctuation
+      </span>
+      <span
+        className={styles.configButton}
+        onClick={() => updateConfig({ numbers: !config.numbers })}
+        style={{ color: config.numbers ? '#f2ce83' : 'inherit' }}
+      >
+        numbers
+      </span>
     </div>
   );
 }
