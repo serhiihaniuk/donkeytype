@@ -6,5 +6,5 @@
   top: -3rem;
   z-index: 999;
   color: black;
-  background-color: #f2ce83;
+  background-color: var(--alt-color);
 }

@@ -73,7 +73,7 @@ export default function RegisterForm() {
               },
             })}
           />
-          <p>{errors.username?.message}</p>
+          <p className={styles.error}>{errors.username?.message}</p>
         </div>
 
         <div className={styles.formControl}>
@@ -91,7 +91,7 @@ export default function RegisterForm() {
               },
             })}
           />
-          <p>{errors.email?.message}</p>
+          <p className={styles.error}>{errors.email?.message}</p>
           {isEmailInUse && <p>Email is not avaliable</p>}
         </div>
 
@@ -108,7 +108,7 @@ export default function RegisterForm() {
               },
             })}
           />
-          {errors.password && <span>{errors.password.message}</span>}
+          {errors.password && <span className={styles.error}>{errors.password.message}</span>}
         </div>
 
         <div className={styles.formControl}>
@@ -123,7 +123,7 @@ export default function RegisterForm() {
             })}
           />
           {errors.confirmPassword && (
-            <span>{errors.confirmPassword.message}</span>
+            <span className={styles.error}>{errors.confirmPassword.message}</span>
           )}
         </div>
 

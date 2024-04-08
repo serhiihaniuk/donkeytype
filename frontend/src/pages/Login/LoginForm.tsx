@@ -51,7 +51,7 @@ export default function RegisterForm() {
             })}
           />
         </div>
-        {isWrong && <p>Wrong email or password</p>}
+        {isWrong && <p className={styles.error}>Wrong email or password</p>}
         
         
 

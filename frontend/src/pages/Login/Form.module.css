@@ -7,3 +7,7 @@
 .formControl{
   margin-bottom: 10px;
 }
+.error{
+  color: rgb(255, 96, 96);
+  margin-bottom: 10px;
+}
