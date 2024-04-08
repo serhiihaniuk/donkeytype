@@ -39,7 +39,7 @@ class userService {
     const userData = await UserRepository.getUserByEmail(email)
 
     if(!userData){
-      throw new Error('User do not exist')
+      throw new Unauthorized("Wrong email or password")
     }
 
     const isPasswordValid = bcrypt.compareSync(password, userData.password)

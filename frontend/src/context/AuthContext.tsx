@@ -15,7 +15,7 @@ export const ResourceClient = axios.create({
 
 interface AuthContextType {
   handleSignUp: (data: UserSignUpType) => Promise<{ success: boolean, message: string }>;
-  handleSignIn: (data: UserSignInType) => void;
+  handleSignIn: (data: UserSignInType) => Promise<{ success: boolean, message: string }>;
   handleLogOut: () => void;
   isUserLogged: boolean;
   isAppReady: boolean;
@@ -43,9 +43,9 @@ export const AuthContext = createContext<AuthContextType>(
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // const [data, setData] = useState();
   const [isUserLogged, setIsUserLogged] = useState(false);
   const [isAppReady, setIsAppReady] = useState(false);
+  // const [data, setData] = useState();
   // const handleFetchProtected = () => {
   //   ResourceClient.get('/protected')
   //   .then((res)=> {
@@ -66,7 +66,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const handleSignUp = (data: UserSignUpType) => {
-    const response = AuthClient.post('/sign-up', data)
+    return AuthClient.post('/sign-up', data)
       .then((res) => {
         const { accessToken, accessTokenExpiration } = res.data;
         setIsUserLogged(true);
@@ -78,19 +78,21 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           return { success: false, message: 'Email is not avaliable' };
         } else return { success: false, message: error.message };
       });
-    return response;
   };
 
   const handleSignIn = (data: UserSignInType) => {
-    AuthClient.post('/sign-in', data)
+    return AuthClient.post('/sign-in', data)
       .then((res) => {
         const { accessToken, accessTokenExpiration } = res.data;
         setIsUserLogged(true);
 
         inMemoryJWT.setToken(accessToken, accessTokenExpiration);
+        return { success: true, message: ''}
       })
       .catch((error) => {
-        console.error(error);
+        if (error.response.status === 401) {
+          return { success: false, message: 'Wrong email or password' };
+        } else return { success: false, message: error.message };
       });
   };
 

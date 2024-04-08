@@ -1,0 +1,8 @@
+.wrapper {
+  padding: 0 32px
+}
+.container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}

@@ -127,9 +127,8 @@ export default function RegisterForm() {
           )}
         </div>
 
-        <button>Register</button>
+        <button>Sign Up</button>
       </form>
-      <button onClick={() => console.log(errors)}>test </button>
     </>
   );
 }
