@@ -3,6 +3,7 @@ import axios from 'axios';
 import inMemoryJWT from '@/services/inMemoryJWTService';
 import config from '../../../config';
 import { UserSignInType, UserSignUpType } from '@/types/User';
+import Circle from '@/components/Circle';
 
 export const AuthClient = axios.create({
   baseURL: `${config.API_URL}/auth`,
@@ -135,7 +136,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         isAppReady,
       }}
     >
-      {children}
+      {isAppReady ? children : <Circle/>}
     </AuthContext.Provider>
   );
 };
