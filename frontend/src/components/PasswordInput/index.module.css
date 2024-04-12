@@ -1,0 +1,14 @@
+.container{
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.icon{
+  position: absolute;
+  right: 7px;
+  cursor: pointer;
+}
+.input{
+  padding-right: 30px;
+  max-width: 175px;
+}

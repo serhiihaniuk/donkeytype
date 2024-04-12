@@ -5,6 +5,7 @@ import { checkUsername } from '@/services/userServices';
 import { useContext, useState } from 'react';
 import { AuthContext } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import PasswordInput from '@/components/PasswordInput';
 
 type UserInputType = UserSignUpType & {
   confirmPassword: string;
@@ -97,9 +98,8 @@ export default function RegisterForm() {
 
         <div className={styles.formControl}>
           <label htmlFor="password">Password</label>
-          <input
+          <PasswordInput
             id="password"
-            type="password"
             {...register('password', {
               required: 'Password is required',
               minLength: {
@@ -113,7 +113,7 @@ export default function RegisterForm() {
 
         <div className={styles.formControl}>
           <label htmlFor="confirmPassword">Confirm password</label>
-          <input
+          <PasswordInput
             id="confirmPassword"
             type="password"
             {...register('confirmPassword', {

@@ -4,6 +4,7 @@ import styles from './Form.module.css';
 import { useContext, useState } from 'react';
 import { AuthContext } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import PasswordInput from '@/components/PasswordInput';
 
 export default function RegisterForm() {
   const { handleSignIn } = useContext(AuthContext);
@@ -46,9 +47,8 @@ export default function RegisterForm() {
 
         <div className={styles.formControl}>
           <label htmlFor="login-password">Password</label>
-          <input
+          <PasswordInput
             id="login-password"
-            type="password"
             {...register('password', {
               onChange: () => {
                 setIsWrong(false);
