@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import UserRepository from '../repositories/user';
 import TokenService from './tokenService';
 import RefreshSessionsRepository from '../repositories/session';
-import { Conflict, Forbidden, Unauthorized } from '../utils/errors';
+import { Forbidden, Unauthorized } from '../utils/errors';
 
 class userService {
 
@@ -59,6 +59,7 @@ class userService {
       fingerprint
     })
     return {
+      username: userData.username,
       accessToken, 
       refreshToken, 
       accessTokenExpiration: 18e5
