@@ -60,6 +60,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleLogOut = () => {
     AuthClient.post('/logout')
       .then(() => {
+        localStorage.removeItem('username')
         inMemoryJWT.deleteToken();
         setIsUserLogged(false);
       })
@@ -72,6 +73,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         const { accessToken, accessTokenExpiration } = res.data;
         setIsUserLogged(true);
         inMemoryJWT.setToken(accessToken, accessTokenExpiration);
+        localStorage.setItem('username', data.username)
         return { success: true, message: '' };
       })
       .catch((error) => {
@@ -84,10 +86,10 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleSignIn = (data: UserSignInType) => {
     return AuthClient.post('/sign-in', data)
       .then((res) => {
-        const { accessToken, accessTokenExpiration } = res.data;
+        const { username, accessToken, accessTokenExpiration } = res.data;
         setIsUserLogged(true);
-
         inMemoryJWT.setToken(accessToken, accessTokenExpiration);
+        localStorage.setItem('username', username)
         return { success: true, message: ''}
       })
       .catch((error) => {

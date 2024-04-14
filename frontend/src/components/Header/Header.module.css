@@ -22,5 +22,13 @@
 }
 .headerButton {
   cursor: pointer;
-  margin-left: 5px;
+  margin-left: 7px;
+}
+.headerButtons{
+  display: flex;
+  align-items: center;
+}
+.username{
+  color: var(--alt-color);
+  font-weight: bold;
 }

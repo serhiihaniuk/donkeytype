@@ -17,14 +17,14 @@ class UserController {
     const { email, password } = req.body;
     const { fingerprint } = req;
     try {
-      const { accessToken, refreshToken, accessTokenExpiration } =
+      const { username, accessToken, refreshToken, accessTokenExpiration } =
         await userService.signIn({ email, password, fingerprint });
 
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         maxAge: 6048e5,
       });
-      return res.status(201).json({ accessToken, accessTokenExpiration });
+      return res.status(201).json({ username, accessToken, accessTokenExpiration });
     } catch (err) {
       return ErrorsUtils.catchError(res, err);
     }
