@@ -1,12 +1,11 @@
 // @ts-nocheck
-import express, { Express, Request, Response } from 'express';
+import express, { Express, Response } from 'express';
 import dotenv from 'dotenv';
 import Fingerprint from 'express-fingerprint';
 import { authRouter } from './router';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import TokenService from './services/tokenService';
-import UserRepository from './repositories/user';
 
 dotenv.config();
 
