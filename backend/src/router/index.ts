@@ -1,7 +1,6 @@
 //@ts-nocheck
 import { Router } from 'express';
 import UserController from '../controllers/userController';
-import UserRepository from '../repositories/user';
 export const authRouter = Router()
 
 authRouter.post('/sign-up', UserController.signUp);
