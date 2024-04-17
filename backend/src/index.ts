@@ -16,7 +16,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://donkeytype-git-master-j4rv1sggs-projects.vercel.app'],
+    origin: ['http://localhost:5173', 'https://donkey-type.vercel.app'],
     credentials: true,
   })
 );
