@@ -17,14 +17,14 @@ export default function Home() {
   const [status, setStatus] = useContext(StatusContext) as StatusContextType;
   return (
     <div className={styles.wrapper}>
-      {status !== 'finished' ? (
+      {status == 'finished' && result.speedHistory.length ? (
+        <Stats result={result} setStatus={setStatus} />
+      ) : (
         <>
           <TypeConfig isVisible={status === 'waiting'} />
           <TypeBox setResult={setResult} />
         </>
-      ) : (
-        <Stats result={result} setStatus={setStatus} />
-      )} 
+      )}
     </div>
   );
 }
