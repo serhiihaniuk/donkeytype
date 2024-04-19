@@ -17,7 +17,7 @@ export default function Home() {
   const [status, setStatus] = useContext(StatusContext) as StatusContextType;
   return (
     <div className={styles.wrapper}>
-      {status == 'finished' && result.speedHistory.length ? (
+      {status == 'finished' ? (
         <Stats result={result} setStatus={setStatus} />
       ) : (
         <>
