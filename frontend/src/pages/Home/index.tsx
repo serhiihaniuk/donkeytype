@@ -13,6 +13,7 @@ export default function Home() {
     speedHistory: [],
     charCorrectness: {},
     accuracy: { correct: 0, incorrect: 0 },
+    isAfk: false,
   });
   const [status, setStatus] = useContext(StatusContext) as StatusContextType;
   return (

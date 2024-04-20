@@ -4,5 +4,6 @@ export type Results = {
   wpm: number,
   speedHistory: number[],
   charCorrectness: speedHistoryType,
-  accuracy: Accuracy
+  accuracy: Accuracy,
+  isAfk: boolean,
 }

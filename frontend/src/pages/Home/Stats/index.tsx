@@ -52,6 +52,14 @@ const Stats: React.FC<Props> = ({ result, setStatus }) => {
               {result.charCorrectness.skippedCount}
             </span>
           </div>
+          {result.isAfk && (
+            <div className={styles.substatsItem}>
+              <p>other</p>
+              <span>
+               invalid test (afk detected)
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
