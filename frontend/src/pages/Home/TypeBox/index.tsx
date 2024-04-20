@@ -17,8 +17,8 @@ import { StatusContext } from '@/context/StatusContext';
 import { Config, ConfigContextType } from '@/types/Config';
 import { StatusContextType } from '@/types/Status';
 import { Results, speedHistoryType } from '@/types/Results';
-import contractionWords from '@/data/contractionWords'
-import randomIndex from '@/utils/randomIndex'
+import contractionWords from '@/data/contractionWords';
+import randomIndex from '@/utils/randomIndex';
 
 type HistoryObject = { [key: string]: { [key: string]: boolean | null } };
 
@@ -28,7 +28,7 @@ interface WordRefs {
 }
 
 const punctuationMarks = [',', '.', ':', '!'];
-const punctuationMarksToAllow = punctuationMarks.concat(["'"])
+const punctuationMarksToAllow = punctuationMarks.concat(["'"]);
 
 const speedHistory: speedHistoryType = {};
 
@@ -64,17 +64,22 @@ const generateWordsSet = (words: string[], config: Config) => {
   }
   if (config.punctuation) {
     for (let i = 0; i < words.length / 3; i++) {
-      if (Math.random() < 0.2) {             // add punctuation
-        res[randomIndex(words)] += punctuationMarks[randomIndex(punctuationMarks)]; 
+      if (Math.random() < 0.2) {
+        // add punctuation
+        res[randomIndex(words)] +=
+          punctuationMarks[randomIndex(punctuationMarks)];
       }
-      if (Math.random() < 0.2) {             // add contraction words
-        res[randomIndex(words)] = contractionWords[randomIndex(contractionWords)];
+      if (Math.random() < 0.2) {
+        // add contraction words
+        res[randomIndex(words)] =
+          contractionWords[randomIndex(contractionWords)];
       }
     }
     for (let i = 0; i < words.length / 4; i++) {
-      if (Math.random() < 0.1) {              // enclose some words in ''
-          const wordIndex = randomIndex(words);
-          res[wordIndex] = `'${words[wordIndex]}'`;
+      if (Math.random() < 0.1) {
+        // enclose some words in ''
+        const wordIndex = randomIndex(words);
+        res[wordIndex] = `'${words[wordIndex]}'`;
       }
     }
   }
@@ -104,6 +109,7 @@ const countCharCorrectness = (history: HistoryObject) => {
   }
   return { correctCount, errorCount, skippedCount };
 };
+let isAfkDetected = false;
 
 let accuracy = { correct: 0, incorrect: 0 };
 
@@ -112,7 +118,7 @@ type Props = {
 };
 
 const TypeBox: React.FC<Props> = ({ setResult }) => {
-  {/* @ts-expect-error */}
+  { /* @ts-expect-error */ }
   const [config] = useContext(ConfigContext) as ConfigContextType;
   const [status, setStatus] = useContext(StatusContext) as StatusContextType;
 
@@ -125,6 +131,8 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
         .map(() => ({ error: false, ref: React.createRef() })),
     [words]
   );
+
+  const [afkTimer, setAfkTimer] = useState<NodeJS.Timeout | null>(null);
 
   const inputRef: MutableRefObject<HTMLInputElement | null> = useRef(null);
   const [currInput, setCurrInput] = useState('');
@@ -142,6 +150,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   const [liveWPM, setLiveWPM] = useState(0);
 
   const start = () => {
+    isAfkDetected = false;
     inputRef.current?.focus();
     accuracy = { correct: 0, incorrect: 0 };
     setStatus('started');
@@ -158,6 +167,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
             speedHistory: Object.values(speedHistory),
             charCorrectness: countCharCorrectness(history),
             accuracy,
+            isAfk: Boolean(isAfkDetected),
           });
           clearInterval(timeOut);
           finish();
@@ -241,7 +251,8 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
 
   const handleKeyDown = (e: KeyboardEvent) => {
     const key = e.key;
-    const keyCode = e.keyCode 
+    const keyCode = e.keyCode;
+
     setCapsLocked(e.getModifierState('CapsLock'));
 
     //tab
@@ -261,14 +272,14 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
         setCurrInput(inputWordsHistory[currWordIndex - 1]);
         return;
       }
-      
+
       if (currCharIndex < 0) {
         return;
       }
-      
+
       setCurrCharIndex(currCharIndex - 1);
       setCurrChar('');
-      
+
       delete history[currWordIndex][currCharIndex];
       return;
     }
@@ -285,15 +296,22 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
       !(keyCode >= 48 && keyCode <= 57) && // Numbers
       !(keyCode >= 65 && keyCode <= 90) && // Uppercase letters
       !(keyCode >= 97 && keyCode <= 122) && // Lowercase letters
-      !(punctuationMarksToAllow.includes(key))
+      !punctuationMarksToAllow.includes(key)
     ) {
       e.preventDefault();
       return;
     }
-   
-
     setCurrCharIndex(currCharIndex + 1);
     setCurrChar(key);
+    if (afkTimer) {
+      clearTimeout(afkTimer);
+    }
+    setAfkTimer(
+      setTimeout(() => {
+        console.log('fds');
+        isAfkDetected = true;
+      }, 5000)
+    );
   };
 
   const getCharClassName = (

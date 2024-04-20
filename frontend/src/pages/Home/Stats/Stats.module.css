@@ -29,6 +29,7 @@
   display: grid;
   grid-area: substats;
   justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
 }
 .substatsItem{
   width: 200px;
