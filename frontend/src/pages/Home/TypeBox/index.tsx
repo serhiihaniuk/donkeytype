@@ -253,6 +253,8 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     const key = e.key;
     const keyCode = e.keyCode;
 
+    const isCtrlPressed = e.ctrlKey;
+
     setCapsLocked(e.getModifierState('CapsLock'));
 
     //tab
@@ -261,9 +263,13 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
       reset();
       return;
     }
-
     // backspace
     if (keyCode === 8) {
+      if (isCtrlPressed) {
+        setCurrCharIndex(-1);
+        history[currWordIndex] = {};
+        return;
+      }
       // jump to previous word if there is an error
       if (currCharIndex < 0 && wordSpanRefs[currWordIndex - 1].error) {
         e.preventDefault();
@@ -308,7 +314,6 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     }
     setAfkTimer(
       setTimeout(() => {
-        console.log('fds');
         isAfkDetected = true;
       }, 5000)
     );
