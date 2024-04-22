@@ -93,7 +93,7 @@ export default function RegisterForm() {
             })}
           />
           <p className={styles.error}>{errors.email?.message}</p>
-          {isEmailInUse && <p>Email is not avaliable</p>}
+          {isEmailInUse && <p className={styles.emailError}>Email is not avaliable</p>}
         </div>
 
         <div className={styles.formControl}>
@@ -105,6 +105,10 @@ export default function RegisterForm() {
               minLength: {
                 value: 8,
                 message: 'Password must be at least 8 characters',
+              },
+              pattern: {
+                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+                message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number',
               },
             })}
           />
