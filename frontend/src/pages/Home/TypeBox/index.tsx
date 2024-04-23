@@ -110,6 +110,7 @@ const countCharCorrectness = (history: HistoryObject) => {
   return { correctCount, errorCount, skippedCount };
 };
 let isAfkDetected = false;
+let afkTimer: NodeJS.Timeout | null = null;
 
 let accuracy = { correct: 0, incorrect: 0 };
 
@@ -131,8 +132,6 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
         .map(() => ({ error: false, ref: React.createRef() })),
     [words]
   );
-
-  const [afkTimer, setAfkTimer] = useState<NodeJS.Timeout | null>(null);
 
   const inputRef: MutableRefObject<HTMLInputElement | null> = useRef(null);
   const [currInput, setCurrInput] = useState('');
@@ -180,12 +179,14 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   };
 
   const finish = () => {
+    clearTimeout(afkTimer as NodeJS.Timeout);
     clearInterval(intervalRef.current as NodeJS.Timeout);
     setTimer(0);
     setStatus('finished');
   };
 
   const reset = () => {
+    clearTimeout(afkTimer as NodeJS.Timeout);
     clearInterval(intervalRef.current as NodeJS.Timeout);
     setTimer(0);
     setLiveWPM(0);
@@ -312,11 +313,9 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     if (afkTimer) {
       clearTimeout(afkTimer);
     }
-    setAfkTimer(
-      setTimeout(() => {
-        isAfkDetected = true;
-      }, 5000)
-    );
+    afkTimer = setTimeout(() => {
+      isAfkDetected = true;
+    }, 5000);
   };
 
   const getCharClassName = (
