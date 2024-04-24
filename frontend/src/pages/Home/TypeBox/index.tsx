@@ -272,12 +272,14 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
         return;
       }
       // jump to previous word if there is an error
-      if (currCharIndex < 0 && wordSpanRefs[currWordIndex - 1].error) {
-        e.preventDefault();
-        setCurrWordIndex(currWordIndex - 1);
-        setCurrCharIndex(inputWordsHistory[currWordIndex - 1].length - 1);
-        setCurrInput(inputWordsHistory[currWordIndex - 1]);
-        return;
+      if (wordSpanRefs[currWordIndex - 1]) {
+        if (currCharIndex < 0 && wordSpanRefs[currWordIndex - 1].error) {
+          e.preventDefault();
+          setCurrWordIndex(currWordIndex - 1);
+          setCurrCharIndex(inputWordsHistory[currWordIndex - 1].length - 1);
+          setCurrInput(inputWordsHistory[currWordIndex - 1]);
+          return;
+        }
       }
 
       if (currCharIndex < 0) {
