@@ -1,9 +1,9 @@
 import { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import inMemoryJWT from '@/services/inMemoryJWTService';
-import config from '../../../config';
 import { UserSignInType, UserSignUpType } from '@/types/User';
 import Circle from '@/components/Circle';
+import config from '../../config';
 
 export const AuthClient = axios.create({
   baseURL: `${config.API_URL}/auth`,

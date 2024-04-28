@@ -1,5 +1,5 @@
 import { AuthClient } from '@/context/AuthContext';
-import config from '../../../config';
+import config from '../../config'
 
 const inMemoryJWTService = () => {
   let inMemoryJWT: string | null = null;
