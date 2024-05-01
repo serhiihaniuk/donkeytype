@@ -23,10 +23,10 @@ class UserController {
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         maxAge: 6048e5,
-        sameSite: 'None',
-        secure: true 
       });
-      return res.status(201).json({ username, accessToken, accessTokenExpiration });
+      return res
+        .status(201)
+        .json({ username, accessToken, accessTokenExpiration });
     } catch (err) {
       return ErrorsUtils.catchError(res, err);
     }
@@ -48,8 +48,6 @@ class UserController {
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         maxAge: 6048e5,
-        sameSite: 'None', 
-        secure: true 
       });
       return res.status(201).json({ accessToken, accessTokenExpiration });
     } catch (err) {
@@ -71,7 +69,7 @@ class UserController {
 
   static async refresh(req, res) {
     const { fingerprint } = req;
-    const currentRefreshToken = req.cookies.refreshToken;
+    const currentRefreshToken = req.cookies?.refreshToken;
     try {
       const { accessToken, refreshToken, accessTokenExpiration } =
         await userService.refresh({
@@ -82,8 +80,6 @@ class UserController {
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         maxAge: 6048e5,
-        sameSite: 'None', 
-        secure: true 
       });
       return res.status(200).json({ accessToken, accessTokenExpiration });
     } catch (err) {
