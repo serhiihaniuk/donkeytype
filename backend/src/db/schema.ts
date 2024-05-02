@@ -14,4 +14,10 @@ export const refreshSessions = pgTable("refreshSessions", {
   fingerPrint: text("finger_print").notNull()
 })
 
+export const wordsTable = pgTable("words", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  words: text('words').array().notNull(),
+})
+
 

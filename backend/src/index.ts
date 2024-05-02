@@ -2,7 +2,7 @@
 import express, { Express, Response } from 'express';
 import dotenv from 'dotenv';
 import Fingerprint from 'express-fingerprint';
-import { authRouter } from './router';
+import { authRouter, wordsRouter } from './router';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 
@@ -21,6 +21,7 @@ app.use(
 );
 
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/words', wordsRouter)
 
 app.use(express.static(path.join(__dirname, '../../src/frontend/dist')));
 

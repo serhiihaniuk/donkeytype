@@ -36,6 +36,13 @@
       "when": 1713204471426,
       "tag": "0004_cooing_bug",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1714659783066,
+      "tag": "0005_purple_daimon_hellstrom",
+      "breakpoints": true
     }
   ]
 }
