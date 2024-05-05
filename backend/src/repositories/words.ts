@@ -8,7 +8,7 @@ class WordsRepository {
     if(!response.length){
       return null
     }
-    return response
+    return response[0]
   }
 }
 export default WordsRepository

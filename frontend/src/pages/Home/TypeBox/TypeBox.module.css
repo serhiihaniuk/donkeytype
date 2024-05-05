@@ -8,13 +8,19 @@
   opacity: 0;
   pointer-events: none;
 }
+.wordsWrapper{
+  height: 132px;
+  width: 1000px;
+  position: relative;
+  overflow: hidden;
+}
 .words {
   color: #446ad5;
+  position: absolute;
   font-size: 30px;
   max-width: 1000px;
   display: flex;
   flex-wrap: wrap;
-  position: relative;
   cursor: default;
 }
 .blurred{
@@ -25,7 +31,6 @@
 .startSign{
   position: absolute;
   top: 31%;
-  left: 41%;
   color: white;
   pointer-events: none;
 }
