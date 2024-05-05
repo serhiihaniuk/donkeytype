@@ -19,6 +19,9 @@ import { StatusContextType } from '@/types/Status';
 import { Results, speedHistoryType } from '@/types/Results';
 import contractionWords from '@/data/contractionWords';
 import randomIndex from '@/utils/randomIndex';
+// import appConfig from '../../../../config';
+// import axios from 'axios';
+// import Circle from '@/components/Circle';
 
 type HistoryObject = { [key: string]: { [key: string]: boolean | null } };
 
@@ -122,6 +125,23 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   { /* @ts-expect-error */ }
   const [config] = useContext(ConfigContext) as ConfigContextType;
   const [status, setStatus] = useContext(StatusContext) as StatusContextType;
+  // const [loading, setLoading] = useState(true); // Статус загрузки данных
+
+  // const [wordsData, setWordsData] = useState([]);
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`${appConfig.API_URL}/words/getWords?name=english`)
+  //     .then((res) => {
+  //       console.log(res.data.words);
+  //       setWordsData(res.data.words);
+  //       setLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error fetching words:', error);
+  //       setLoading(false);
+  //     });
+  // }, []);
 
   const wordsArr = useMemo(() => generateWordsSet(wordsData, config), []);
   const [words, setWords] = useState(wordsArr);
@@ -146,6 +166,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   const [timer, setTimer] = useState(0);
   const intervalRef: { current: NodeJS.Timeout | null } = useRef(null);
 
+  const [wordsPosition, setWordsPosition] = useState(0);
   const [liveWPM, setLiveWPM] = useState(0);
 
   const start = () => {
@@ -402,58 +423,84 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
       });
     }
   };
+
+  const scrollWords = () => {
+    const activeWord = document.querySelector('.active.word') as HTMLElement;
+
+    const wordsElement = document.querySelector('#words') as HTMLElement;
+    if (!wordsElement || !activeWord) {
+      return;
+    }
+    if (activeWord.offsetTop + wordsElement.offsetTop > 75) {
+      setWordsPosition((prev) => prev - 45);
+    }
+  };
+  useEffect(() => {
+    scrollWords();
+  }, [currWordIndex]);
+
   return (
-    <div className={styles.container}>
-      <div
-        className={styles.words}
-        style={{
-          opacity: isFocused ? '1' : '.25',
-          filter: isFocused ? '' : 'blur(4px)',
-        }}
-        onClick={() => inputRef.current?.focus()}
-      >
-        {words.map((word: string, i: number) => (
-          <span
-            key={i}
-            ref={wordSpanRefs[i].ref}
-            className={getWordClassName(i)}
-          >
-            {word.split('').map((char: string, idx: number) => (
-              <span
-                key={'word' + idx}
-                className={getCharClassName(i, idx, char, word)}
-              >
-                {char}
-              </span>
-            ))}
-            {getExtraCharsDisplay(word, i)}
-          </span>
-        ))}
-      </div>
-      {!isFocused && (
-        <div className={styles.startSign}>Click here to start typing</div>
-      )}
-      <input
-        key="hidden-input"
-        ref={inputRef}
-        type="text"
-        className={styles.hiddenInput}
-        // @ts-ignore
-        onKeyDown={handleKeyDown}
-        value={currInput}
-        onFocus={() => handleFocus(true)}
-        onBlur={() => handleFocus(false)}
-        onInput={handleInput}
-        onChange={(e) => updateInput(e)}
-      />
-      {status === 'started' && (
-        <>
-          <p>Live WPM: {liveWPM}</p>
-          <p>{config.time - timer}</p>
-        </>
-      )}
-      <CapsLockPopup open={capsLocked} />
-    </div>
+    <>
+      {/* {loading ? (
+        <Circle />
+      ) : ( */}
+        <div className={styles.container}>
+          <div id="wordsWrapper" className={styles.wordsWrapper}>
+            <div
+              id="words"
+              className={styles.words}
+              style={{
+                opacity: isFocused ? '1' : '.25',
+                filter: isFocused ? '' : 'blur(4px)',
+                top: `${wordsPosition}px`,
+              }}
+              onClick={() => inputRef.current?.focus()}
+            >
+              {words.map((word: string, i: number) => (
+                <span
+                  key={i}
+                  ref={wordSpanRefs[i].ref}
+                  className={getWordClassName(i)}
+                >
+                  {word.split('').map((char: string, idx: number) => (
+                    <span
+                      key={'word' + idx}
+                      className={getCharClassName(i, idx, char, word)}
+                    >
+                      {char}
+                    </span>
+                  ))}
+                  {getExtraCharsDisplay(word, i)}
+                </span>
+              ))}
+            </div>
+          </div>
+          {!isFocused && (
+            <div className={styles.startSign}>Click here to start typing</div>
+          )}
+          <input
+            key="hidden-input"
+            ref={inputRef}
+            type="text"
+            className={styles.hiddenInput}
+            // @ts-ignore
+            onKeyDown={handleKeyDown}
+            value={currInput}
+            onFocus={() => handleFocus(true)}
+            onBlur={() => handleFocus(false)}
+            onInput={handleInput}
+            onChange={(e) => updateInput(e)}
+          />
+          {status === 'started' && (
+            <>
+              <p>Live WPM: {liveWPM}</p>
+              <p>{config.time - timer}</p>
+            </>
+          )}
+          <CapsLockPopup open={capsLocked} />
+        </div>
+      {/* )} */}
+    </>
   );
 };
 
