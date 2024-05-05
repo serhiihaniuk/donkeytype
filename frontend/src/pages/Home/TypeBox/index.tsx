@@ -219,6 +219,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     setStatus('waiting');
     setHistory(generateObject(words));
     setWords(generateWordsSet(wordsData, config));
+    setWordsPosition(0)
   };
 
   const [currChar, setCurrChar] = useState('');
