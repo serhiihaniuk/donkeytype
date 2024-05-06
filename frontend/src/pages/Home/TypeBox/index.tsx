@@ -447,7 +447,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   return (
     <>
       {loading && !words.length ? (
-        <Circle />
+        <Circle center={false} />
       ) : (
         <div className={styles.container}>
           <div id="wordsWrapper" className={styles.wordsWrapper}>

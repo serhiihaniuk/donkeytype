@@ -138,7 +138,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         isAppReady,
       }}
     >
-      {isAppReady ? children : <Circle/>}
+      {isAppReady ? children : <Circle center={true}/>}
     </AuthContext.Provider>
   );
 };

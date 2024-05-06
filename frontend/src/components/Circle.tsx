@@ -1,10 +1,15 @@
 import { TailSpin } from 'react-loader-spinner';
 
-const Circle = () => {
+type CircleProps = {
+  center: boolean;
+};
+
+const Circle: React.FC<CircleProps> = ({ center }) => {
   const circleStyle = {
     display: 'flex',
     justifyContent: 'center',
-    margin: '40vh auto'
+    margin: center ? '40vh auto' : '5% auto'
+    
   };
   return (
     <div style={circleStyle}>
