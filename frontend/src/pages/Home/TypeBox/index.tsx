@@ -9,7 +9,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import wordsData from '@/data/words';
 import styles from './TypeBox.module.css';
 import CapsLockPopup from './CapsLockPopup';
 import { ConfigContext } from '@/context/ConfigContext';
@@ -19,9 +18,9 @@ import { StatusContextType } from '@/types/Status';
 import { Results, speedHistoryType } from '@/types/Results';
 import contractionWords from '@/data/contractionWords';
 import randomIndex from '@/utils/randomIndex';
-// import appConfig from '../../../../config';
-// import axios from 'axios';
-// import Circle from '@/components/Circle';
+import appConfig from '../../../../config';
+import axios from 'axios';
+import Circle from '@/components/Circle';
 
 type HistoryObject = { [key: string]: { [key: string]: boolean | null } };
 
@@ -120,31 +119,35 @@ let accuracy = { correct: 0, incorrect: 0 };
 type Props = {
   setResult: (results: Results) => void;
 };
+let wordsData: string[] = [];
 
 const TypeBox: React.FC<Props> = ({ setResult }) => {
-  { /* @ts-expect-error */ }
+  {  /* @ts-expect-error */  }
   const [config] = useContext(ConfigContext) as ConfigContextType;
   const [status, setStatus] = useContext(StatusContext) as StatusContextType;
-  // const [loading, setLoading] = useState(true); // Статус загрузки данных
+  const [loading, setLoading] = useState(true);
 
-  // const [wordsData, setWordsData] = useState([]);
+  const [words, setWords] = useState<string[]>([]);
+  const [history, setHistory] = useState<HistoryObject>();
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`${appConfig.API_URL}/words/getWords?name=english`)
-  //     .then((res) => {
-  //       console.log(res.data.words);
-  //       setWordsData(res.data.words);
-  //       setLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error fetching words:', error);
-  //       setLoading(false);
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .get(`${appConfig.API_URL}/words/getWords?name=english`)
+      .then((res) => {
+        if (!wordsData.length) {
+          wordsData = res.data.words;
+          setWords(generateWordsSet(wordsData, config));
+          setHistory(generateObject(res.data.words));
+        }
 
-  const wordsArr = useMemo(() => generateWordsSet(wordsData, config), []);
-  const [words, setWords] = useState(wordsArr);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching words:', error);
+        setLoading(false);
+      });
+  }, []);
+
   const wordSpanRefs: WordRefs[] = useMemo(
     () =>
       Array(words.length)
@@ -162,7 +165,6 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
 
   const [capsLocked, setCapsLocked] = useState(false);
 
-  const [history, setHistory] = useState<HistoryObject>(generateObject(words));
   const [timer, setTimer] = useState(0);
   const intervalRef: { current: NodeJS.Timeout | null } = useRef(null);
 
@@ -181,7 +183,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
         const wpm = Math.round(calculateWPM(newTimer));
         setLiveWPM(wpm);
 
-        if (newTimer > config.time) {
+        if (newTimer > config.time && history) {
           setResult({
             wpm: Math.round(calculateWPM(prevTimer)),
             speedHistory: Object.values(speedHistory),
@@ -219,7 +221,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     setStatus('waiting');
     setHistory(generateObject(words));
     setWords(generateWordsSet(wordsData, config));
-    setWordsPosition(0)
+    setWordsPosition(0);
   };
 
   const [currChar, setCurrChar] = useState('');
@@ -235,7 +237,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   };
   useEffect(() => {
     setWords(generateWordsSet(wordsData, config));
-  }, [config]);
+  }, [config, wordsData]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -287,8 +289,8 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
       return;
     }
     // backspace
-    if (keyCode === 8) {
-      if (isCtrlPressed) {
+    if (keyCode === 8 && history) {
+      if (isCtrlPressed && history) {
         setCurrCharIndex(-1);
         history[currWordIndex] = {};
         return;
@@ -348,6 +350,9 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     char: string,
     word: string
   ) => {
+    if (!history) {
+      return;
+    }
     if (history[wordIdx][charIdx] === true) {
       if (
         wordIdx === currWordIndex &&
@@ -439,12 +444,11 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   useEffect(() => {
     scrollWords();
   }, [currWordIndex]);
-
   return (
     <>
-      {/* {loading ? (
+      {loading && !words.length ? (
         <Circle />
-      ) : ( */}
+      ) : (
         <div className={styles.container}>
           <div id="wordsWrapper" className={styles.wordsWrapper}>
             <div
@@ -500,7 +504,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
           )}
           <CapsLockPopup open={capsLocked} />
         </div>
-      {/* )} */}
+      )}
     </>
   );
 };
