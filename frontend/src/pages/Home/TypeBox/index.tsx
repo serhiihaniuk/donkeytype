@@ -18,9 +18,6 @@ import { StatusContextType } from '@/types/Status';
 import { Results, speedHistoryType } from '@/types/Results';
 import contractionWords from '@/data/contractionWords';
 import randomIndex from '@/utils/randomIndex';
-import appConfig from '../../../../config';
-import axios from 'axios';
-import Circle from '@/components/Circle';
 
 type HistoryObject = { [key: string]: { [key: string]: boolean | null } };
 
@@ -117,37 +114,16 @@ let afkTimer: NodeJS.Timeout | null = null;
 let accuracy = { correct: 0, incorrect: 0 };
 
 type Props = {
+  wordsData: string[];
   setResult: (results: Results) => void;
 };
-let wordsData: string[] = [];
 
-const TypeBox: React.FC<Props> = ({ setResult }) => {
-  {  /* @ts-expect-error */  }
+const TypeBox: React.FC<Props> = ({ wordsData, setResult }) => {
+  {/* @ts-expect-error */}
   const [config] = useContext(ConfigContext) as ConfigContextType;
   const [status, setStatus] = useContext(StatusContext) as StatusContextType;
-  const [loading, setLoading] = useState(true);
 
-  const [words, setWords] = useState<string[]>([]);
-  const [history, setHistory] = useState<HistoryObject>();
-
-  useEffect(() => {
-    axios
-      .get(`${appConfig.API_URL}/words/getWords?name=english`)
-      .then((res) => {
-        if (!wordsData.length) {
-          wordsData = res.data.words;
-          setWords(generateWordsSet(wordsData, config));
-          setHistory(generateObject(res.data.words));
-        }
-
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching words:', error);
-        setLoading(false);
-      });
-  }, []);
-
+  const [words, setWords] = useState(generateWordsSet(wordsData, config));
   const wordSpanRefs: WordRefs[] = useMemo(
     () =>
       Array(words.length)
@@ -164,6 +140,7 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   const [currCharIndex, setCurrCharIndex] = useState(-1);
 
   const [capsLocked, setCapsLocked] = useState(false);
+  const [history, setHistory] = useState<HistoryObject>(generateObject(words));
 
   const [timer, setTimer] = useState(0);
   const intervalRef: { current: NodeJS.Timeout | null } = useRef(null);
@@ -236,8 +213,8 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
     }
   };
   useEffect(() => {
-    setWords(generateWordsSet(wordsData, config));
-  }, [config, wordsData]);
+      setWords(generateWordsSet(wordsData, config));
+  }, [config]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -446,65 +423,62 @@ const TypeBox: React.FC<Props> = ({ setResult }) => {
   }, [currWordIndex]);
   return (
     <>
-      {loading && !words.length ? (
-        <Circle center={false} />
-      ) : (
-        <div className={styles.container}>
-          <div id="wordsWrapper" className={styles.wordsWrapper}>
-            <div
-              id="words"
-              className={styles.words}
-              style={{
-                opacity: isFocused ? '1' : '.25',
-                filter: isFocused ? '' : 'blur(4px)',
-                top: `${wordsPosition}px`,
-              }}
-              onClick={() => inputRef.current?.focus()}
-            >
-              {words.map((word: string, i: number) => (
-                <span
-                  key={i}
-                  ref={wordSpanRefs[i].ref}
-                  className={getWordClassName(i)}
-                >
-                  {word.split('').map((char: string, idx: number) => (
-                    <span
-                      key={'word' + idx}
-                      className={getCharClassName(i, idx, char, word)}
-                    >
-                      {char}
-                    </span>
-                  ))}
-                  {getExtraCharsDisplay(word, i)}
-                </span>
-              ))}
-            </div>
+      <div className={styles.container}>
+        <div id="wordsWrapper" className={styles.wordsWrapper}>
+          <div
+            id="words"
+            className={styles.words}
+            style={{
+              opacity: isFocused ? '1' : '.25',
+              filter: isFocused ? '' : 'blur(4px)',
+              top: `${wordsPosition}px`,
+            }}
+            onClick={() => inputRef.current?.focus()}
+          >
+            {words.map((word: string, i: number) => (
+              <span
+                key={i}
+                ref={wordSpanRefs[i].ref}
+                className={getWordClassName(i)}
+              >
+                {word.split('').map((char: string, idx: number) => (
+                  <span
+                    key={'word' + idx}
+                    className={getCharClassName(i, idx, char, word)}
+                  >
+                    {char}
+                  </span>
+                ))}
+                {getExtraCharsDisplay(word, i)}
+              </span>
+            ))}
           </div>
-          {!isFocused && (
-            <div className={styles.startSign}>Click here to start typing</div>
-          )}
-          <input
-            key="hidden-input"
-            ref={inputRef}
-            type="text"
-            className={styles.hiddenInput}
-            // @ts-ignore
-            onKeyDown={handleKeyDown}
-            value={currInput}
-            onFocus={() => handleFocus(true)}
-            onBlur={() => handleFocus(false)}
-            onInput={handleInput}
-            onChange={(e) => updateInput(e)}
-          />
-          {status === 'started' && (
-            <>
-              <p>Live WPM: {liveWPM}</p>
-              <p>{config.time - timer}</p>
-            </>
-          )}
-          <CapsLockPopup open={capsLocked} />
         </div>
-      )}
+        {!isFocused && (
+          <div className={styles.startSign}>Click here to start typing</div>
+        )}
+        <input
+          key="hidden-input"
+          ref={inputRef}
+          type="text"
+          className={styles.hiddenInput}
+          // @ts-ignore
+          onKeyDown={handleKeyDown}
+          value={currInput}
+          onFocus={() => handleFocus(true)}
+          onBlur={() => handleFocus(false)}
+          onInput={handleInput}
+          onChange={(e) => updateInput(e)}
+        />
+        {status === 'started' && (
+          <>
+            <p>Live WPM: {liveWPM}</p>
+            <p>{config.time - timer}</p>
+          </>
+        )}
+        <CapsLockPopup open={capsLocked} />
+      </div>
+      {/* )} */}
     </>
   );
 };
