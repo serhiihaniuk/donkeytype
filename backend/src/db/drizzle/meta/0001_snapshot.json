@@ -1,10 +1,8 @@
 {
-  "id": "49e552e4-dd27-4da0-93c7-c04ee1e5fab1",
-  "prevId": "7bb6486f-36f1-412f-9350-d26dd9786219",
-  "version": "5",
-  "dialect": "pg",
+  "version": "6",
+  "dialect": "postgresql",
   "tables": {
-    "refreshSessions": {
+    "public.refreshSessions": {
       "name": "refreshSessions",
       "schema": "",
       "columns": {
@@ -38,21 +36,21 @@
         "refreshSessions_user_id_users_id_fk": {
           "name": "refreshSessions_user_id_users_id_fk",
           "tableFrom": "refreshSessions",
-          "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "users",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "users": {
+    "public.users": {
       "name": "users",
       "schema": "",
       "columns": {
@@ -87,10 +85,10 @@
       "uniqueConstraints": {
         "users_email_unique": {
           "name": "users_email_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "email"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     }
@@ -98,8 +96,10 @@
   "enums": {},
   "schemas": {},
   "_meta": {
-    "columns": {},
     "schemas": {},
-    "tables": {}
-  }
+    "tables": {},
+    "columns": {}
+  },
+  "id": "49e552e4-dd27-4da0-93c7-c04ee1e5fab1",
+  "prevId": "7bb6486f-36f1-412f-9350-d26dd9786219"
 }

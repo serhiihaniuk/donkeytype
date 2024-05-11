@@ -20,4 +20,10 @@ export const wordsTable = pgTable("words", {
   words: text('words').array().notNull(),
 })
 
+export const resultsTable = pgTable("results", {
+  id: serial("id").primaryKey(),
+  time: integer("time").notNull(),
+  wpm: integer("wpm").notNull(),
+  userId: integer("user_id").notNull().references(() => usersTable.id, { onDelete: 'cascade' }),
+})
 

@@ -43,6 +43,13 @@
       "when": 1714659783066,
       "tag": "0005_purple_daimon_hellstrom",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1715426324231,
+      "tag": "0006_wise_riptide",
+      "breakpoints": true
     }
   ]
 }
