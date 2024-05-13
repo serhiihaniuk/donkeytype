@@ -167,6 +167,7 @@ const TypeBox: React.FC<Props> = ({ wordsData, setResult }) => {
             charCorrectness: countCharCorrectness(history),
             accuracy,
             isAfk: Boolean(isAfkDetected),
+            time: config.time
           });
           clearInterval(timeOut);
           finish();

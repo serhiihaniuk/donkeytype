@@ -2,6 +2,7 @@
 import { Router } from 'express';
 import UserController from '../controllers/userController';
 import WordsController from '../controllers/wordsController';
+import restulsController from '../controllers/resultsController';
 export const authRouter = Router()
 
 authRouter.post('/sign-up', UserController.signUp);
@@ -12,6 +13,10 @@ authRouter.get('/checkUsername', UserController.checkUsername)
 
 export const wordsRouter = Router()
 wordsRouter.get('/getWords', WordsController.getWords)
+
+export const resultsRouter = Router()
+
+resultsRouter.post('/save', restulsController.registerResult)
 
 
 

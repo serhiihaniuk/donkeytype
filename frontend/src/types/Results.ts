@@ -6,4 +6,6 @@ export type Results = {
   charCorrectness: speedHistoryType,
   accuracy: Accuracy,
   isAfk: boolean,
+  time: number,
 }
+export type ResultsToSend = Pick<Results, 'wpm' | 'time'>;

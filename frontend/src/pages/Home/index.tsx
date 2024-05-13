@@ -19,9 +19,10 @@ export default function Home() {
     charCorrectness: {},
     accuracy: { correct: 0, incorrect: 0 },
     isAfk: false,
+    time: 0
   });
   const [status, setStatus] = useContext(StatusContext) as StatusContextType;
-  const [loading, setLoading] = useState(true); // Статус загрузки данных
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     axios

@@ -1,8 +1,10 @@
 import { Results } from '@/types/Results';
 import Chart from './Chart';
 import styles from './Stats.module.css';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { Accuracy } from '@/types/Results';
+import { saveResult } from '@/services/resultServices';
+import { AuthContext } from '@/context/AuthContext';
 
 const calcAccuracy = ({ correct, incorrect }: Accuracy) => {
   return Math.floor((100 / (correct + incorrect)) * correct) | 0;
@@ -14,7 +16,14 @@ interface Props {
 }
 
 const Stats: React.FC<Props> = ({ result, setStatus }) => {
+  const { isUserLogged } = useContext(AuthContext);
   useEffect(() => {
+    let isSended: boolean = false;
+    console.log(isUserLogged, isSended)
+    if (isUserLogged && !isSended) {
+      saveResult(result);
+      isSended = true;
+    }
     const handleTabPress = (event: KeyboardEvent) => {
       if (event.key === 'Tab') {
         event.preventDefault();
@@ -27,6 +36,7 @@ const Stats: React.FC<Props> = ({ result, setStatus }) => {
     return () => {
       window.removeEventListener('keydown', handleTabPress);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setStatus]);
 
   return (
@@ -55,9 +65,7 @@ const Stats: React.FC<Props> = ({ result, setStatus }) => {
           {result.isAfk && (
             <div className={styles.substatsItem}>
               <p>other</p>
-              <span>
-               invalid test (afk detected)
-              </span>
+              <span>invalid test (afk detected)</span>
             </div>
           )}
         </div>
