@@ -19,6 +19,7 @@ class ResultsService {
     const allResults = await ResultRepository.getResultsById(userId)
     console.log(allResults)
   }
+  
   static async getBestResultsByUser(userId) {
     const allResults = await ResultRepository.getResultsById(userId)
     const res = {

@@ -1,0 +1,27 @@
+.wrapper{
+  max-width: 1280px;
+}
+.mainCard{
+  background-color: var(--sub-color);
+  border-radius: 1rem;
+  padding: 14px;
+  display: flex;
+  justify-content: space-between;
+}
+.leftSide{
+  width: 40%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.leftSide span{
+  font-size: 30px;
+}
+.rightSide{
+  width: 40%;
+  font-size: 19px;
+}
+.listItem{
+  display: flex;
+  justify-content: space-between;
+}

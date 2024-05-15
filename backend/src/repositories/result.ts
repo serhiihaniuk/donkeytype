@@ -10,7 +10,6 @@ class ResultRepository {
       .values({ userId: userId, time: time, wpm: wpm });
   }
   static async getResultsById(userId){
-    console.log(userId)
     return db.select().from(resultsTable).where(eq(resultsTable.userId, userId))
   }
 }
