@@ -16,6 +16,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  const username = localStorage.getItem('username');
+
   useEffect(() => {
     async function fetchData() {
       if (!isUserLogged) {
@@ -40,7 +42,7 @@ export default function Dashboard() {
           <div className={styles.mainCard}>
             <div className={styles.leftSide}>
               <CircleUserRound strokeWidth={2} width={80} height={80} />
-              <span>test</span>
+              <span>{username || '-'}</span>
             </div>
             <div className={styles.rightSide}>
               <div className={styles.listItem}>
