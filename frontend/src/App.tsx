@@ -18,7 +18,7 @@ const App: React.FC = () => {
   const [config, updateConfig] = UseConfig('config');
   const [status, setStatus] = useState('waiting');
   return (
-    <>
+    <div className='wrapper'>
     {/* @ts-expect-error */}
       <ConfigContext.Provider value={[config, updateConfig]}>
         <StatusContext.Provider value={[status, setStatus]}>
@@ -35,7 +35,7 @@ const App: React.FC = () => {
           </AuthProvider>
         </StatusContext.Provider>
       </ConfigContext.Provider>
-    </>
+    </div>
   );
 };
 
