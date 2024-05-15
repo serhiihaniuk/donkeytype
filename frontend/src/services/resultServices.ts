@@ -1,10 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
-import axios from "axios";
-import config from "../../config";
-import { Results } from "@/types/Results";
-import { jwtDecode } from "jwt-decode";
-import inMemoryJWTService from "./inMemoryJWTService";
+import axios from 'axios';
+import config from '../../config';
+import { Results } from '@/types/Results';
+import { jwtDecode } from 'jwt-decode';
+import inMemoryJWTService from './inMemoryJWTService';
 
 export const ResultApi = axios.create({
   baseURL: `${config.API_URL}/results`,
@@ -12,8 +12,7 @@ export const ResultApi = axios.create({
 });
 
 export const saveResult = async (result: Results) => {
-  
-  const userData = jwtDecode(inMemoryJWTService.getToken())
+  const userData = jwtDecode(inMemoryJWTService.getToken());
   const resultData = {
     ...result,
     userId: userData.id,
@@ -22,12 +21,20 @@ export const saveResult = async (result: Results) => {
   delete resultData.speedHistory;
   delete resultData.accuracy;
   delete resultData.isAfk;
-  resultData.userId = userData.id
+  resultData.userId = userData.id;
   try {
-    await ResultApi.post('/save', resultData)
+    await ResultApi.post('/save', resultData);
   } catch (error) {
-      console.error(error);
-    
+    console.error(error);
   }
-}
+};
 
+export const getBestResults = async () => {
+  const {userId} = jwtDecode(inMemoryJWTService.getToken());
+  try {
+    const res = await ResultApi.get(`/getBestResults?userId=${userId}`);
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
+};

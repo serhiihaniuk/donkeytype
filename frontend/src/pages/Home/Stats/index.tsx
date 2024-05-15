@@ -15,11 +15,10 @@ interface Props {
   setStatus: React.Dispatch<React.SetStateAction<string>>;
 }
 
+let isSended: boolean = false;
 const Stats: React.FC<Props> = ({ result, setStatus }) => {
   const { isUserLogged } = useContext(AuthContext);
   useEffect(() => {
-    let isSended: boolean = false;
-    console.log(isUserLogged, isSended)
     if (isUserLogged && !isSended) {
       saveResult(result);
       isSended = true;
