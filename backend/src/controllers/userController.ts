@@ -23,8 +23,8 @@ class UserController {
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         maxAge: 6048e5,
-        // sameSite: 'None',
-        // secure: true 
+        sameSite: 'None',
+        secure: true 
       });
       return res
         .status(201)
@@ -50,8 +50,8 @@ class UserController {
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         maxAge: 6048e5,
-        // sameSite: 'None',
-        // secure: true 
+        sameSite: 'None',
+        secure: true 
       });
       return res.status(201).json({ accessToken, accessTokenExpiration });
     } catch (err) {
@@ -84,8 +84,8 @@ class UserController {
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         maxAge: 6048e5,
-        // sameSite: 'None',
-        // secure: true 
+        sameSite: 'None',
+        secure: true 
       });
       return res.status(200).json({ accessToken, accessTokenExpiration });
     } catch (err) {
