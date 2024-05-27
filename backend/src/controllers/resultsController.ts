@@ -23,5 +23,23 @@ class restulsController {
         console.error(error)
       }
   }
+  static async getBestResultsByUser(req: Request, res: Response) {
+    const { userId } = req.query;
+    try {
+      const data = await ResultsService.getBestResultsByUser(userId);
+      return res.status(200).json(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  static async getBestResults(req: Request, res: Response) {
+    const { time } = req.query;
+    try {
+      const data = await ResultRepository.getBestResults({ time });
+      return res.status(200).json(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
 export default restulsController;

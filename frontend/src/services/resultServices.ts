@@ -43,3 +43,11 @@ export const getBestResults = async () => {
     }
   }
 };
+export const getLeaderboard = async (time) => {
+    try {
+      const res = await ResultApi.get(`/getLeaderboard?time=${time}`);
+      return res;
+    } catch (error) {
+      console.error(error);
+    }
+};

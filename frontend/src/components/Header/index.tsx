@@ -7,6 +7,7 @@ import { StatusContext } from '@/context/StatusContext';
 import { StatusContextType } from '@/types/Status';
 import { CircleUserRound } from 'lucide-react';
 import { LogOut } from 'lucide-react';
+import Leaderboard from './Leaderboard';
 
 export default function Header() {
   const navigate = useNavigate();
@@ -21,11 +22,13 @@ export default function Header() {
     setStatus('waiting');
     navigate('/');
   };
+
   return (
     <div className={styles.wrapper}>
       <div onClick={handleLogoClick} className={styles.logoWrapper}>
         <img src={logo} alt="Logo" className={styles.logo} />
         <span className={styles.title}>DonkeyType</span>
+        <Leaderboard />
       </div>
       <div className={styles.headerButtons}>
         {isUserLogged ? (
