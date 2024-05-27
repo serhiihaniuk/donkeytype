@@ -16,7 +16,7 @@ const Popup: React.FC<PopupProps> = ({ show, onClose, children }) => {
   return (
     <div className={styles.popupOverlay}>
       <div className={styles.popupContent}>
-        <X className={styles.closeButton} onClick={onClose}></X>
+        <X className={styles.closeButton} onClick={onClose}/>
         {children}
       </div>
     </div>

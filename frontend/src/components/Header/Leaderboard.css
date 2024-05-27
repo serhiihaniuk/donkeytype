@@ -1,0 +1,51 @@
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+thead th {
+  padding: 10px;
+  text-align: left;
+}
+thead th:last-child{
+  padding: 10px;
+  text-align: right;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: var(--sub-color);
+}
+
+tbody td {
+  padding: 10px;
+
+}
+
+tbody td:nth-child(3) {
+  text-align: end;
+}
+.tabTriggers{
+  display: inline-flex;
+  gap: 10px;
+  cursor: pointer;
+}
+.tabTriggers span{
+  padding: 0 5px;
+  border-radius: 10%;
+}
+.activeTabTrigger{
+  background-color: var(--alt-color);
+  color: var(--main-color);
+  font-weight: bold;
+}
+h2{
+  margin-bottom: 10px;
+}
+.leaderboardTime{
+  margin-right: 10px;
+}
