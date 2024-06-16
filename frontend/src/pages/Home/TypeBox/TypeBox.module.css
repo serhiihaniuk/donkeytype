@@ -9,11 +9,16 @@
   opacity: 0;
   pointer-events: none;
 }
+.typeBoxWrapper{
+  width: 100%;
+  position: relative;
+  max-width: 1000px;
+  height: 132px;
+  }
 .wordsWrapper{
   height: 132px;
-  width: 100%;
-  max-width: 1000px;
   position: relative;
+  width: 100%;
   overflow: hidden;
 }
 .words {
@@ -35,4 +40,14 @@
   top: 31%;
   color: white;
   pointer-events: none;
+}
+.liveStats{
+  position: absolute;
+  font-size: 28px;
+  display: flex;
+  gap: 10px;
+  left: 0;
+  top: -40px;
+  padding-left: 8px;
+  color: var(--alt-color);
 }

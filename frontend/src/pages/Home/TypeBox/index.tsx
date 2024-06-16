@@ -119,7 +119,7 @@ type Props = {
 };
 
 const TypeBox: React.FC<Props> = ({ wordsData, setResult }) => {
-  {/* @ts-expect-error */}
+  { /* @ts-expect-error */ }
   const [config] = useContext(ConfigContext) as ConfigContextType;
   const [status, setStatus] = useContext(StatusContext) as StatusContextType;
 
@@ -167,7 +167,7 @@ const TypeBox: React.FC<Props> = ({ wordsData, setResult }) => {
             charCorrectness: countCharCorrectness(history),
             accuracy,
             isAfk: Boolean(isAfkDetected),
-            time: config.time
+            time: config.time,
           });
           clearInterval(timeOut);
           finish();
@@ -214,7 +214,7 @@ const TypeBox: React.FC<Props> = ({ wordsData, setResult }) => {
     }
   };
   useEffect(() => {
-      setWords(generateWordsSet(wordsData, config));
+    setWords(generateWordsSet(wordsData, config));
   }, [config]);
 
   useEffect(() => {
@@ -425,34 +425,43 @@ const TypeBox: React.FC<Props> = ({ wordsData, setResult }) => {
   return (
     <>
       <div className={styles.container}>
-        <div id="wordsWrapper" className={styles.wordsWrapper}>
-          <div
-            id="words"
-            className={styles.words}
-            style={{
-              opacity: isFocused ? '1' : '.25',
-              filter: isFocused ? '' : 'blur(4px)',
-              top: `${wordsPosition}px`,
-            }}
-            onClick={() => inputRef.current?.focus()}
-          >
-            {words.map((word: string, i: number) => (
-              <span
-                key={i}
-                ref={wordSpanRefs[i].ref}
-                className={getWordClassName(i)}
-              >
-                {word.split('').map((char: string, idx: number) => (
-                  <span
-                    key={'word' + idx}
-                    className={getCharClassName(i, idx, char, word)}
-                  >
-                    {char}
-                  </span>
-                ))}
-                {getExtraCharsDisplay(word, i)}
-              </span>
-            ))}
+        <div className={styles.typeBoxWrapper}>
+          {status === 'started' && (
+            <div className={styles.liveStats}>
+              <span>{config.time - timer}</span>
+              <span>{liveWPM}</span>
+            </div>
+          )}
+
+          <div id="wordsWrapper" className={styles.wordsWrapper}>
+            <div
+              id="words"
+              className={styles.words}
+              style={{
+                opacity: isFocused ? '1' : '.25',
+                filter: isFocused ? '' : 'blur(4px)',
+                top: `${wordsPosition}px`,
+              }}
+              onClick={() => inputRef.current?.focus()}
+            >
+              {words.map((word: string, i: number) => (
+                <span
+                  key={i}
+                  ref={wordSpanRefs[i].ref}
+                  className={getWordClassName(i)}
+                >
+                  {word.split('').map((char: string, idx: number) => (
+                    <span
+                      key={'word' + idx}
+                      className={getCharClassName(i, idx, char, word)}
+                    >
+                      {char}
+                    </span>
+                  ))}
+                  {getExtraCharsDisplay(word, i)}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
         {!isFocused && (
@@ -471,12 +480,6 @@ const TypeBox: React.FC<Props> = ({ wordsData, setResult }) => {
           onInput={handleInput}
           onChange={(e) => updateInput(e)}
         />
-        {status === 'started' && (
-          <>
-            <p>Live WPM: {liveWPM}</p>
-            <p>{config.time - timer}</p>
-          </>
-        )}
         <CapsLockPopup open={capsLocked} />
       </div>
       {/* )} */}
