@@ -1,0 +1,9 @@
+.container{
+  position: absolute;
+  display: flex;
+  justify-content: flex-end;
+  right: 0;
+  bottom: 0;
+  padding: 20px 32px;
+  width: 100%;
+}

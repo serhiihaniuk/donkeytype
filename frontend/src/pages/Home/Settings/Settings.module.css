@@ -1,0 +1,11 @@
+.container{
+
+  font-weight: 800;
+}
+.list{
+  padding-top: 10px;
+}
+.listItem{
+  display: flex;
+  justify-content: space-between;
+}

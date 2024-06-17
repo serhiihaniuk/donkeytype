@@ -2,6 +2,7 @@
   box-sizing: border-box;
 }
 .wrapper{
+  position: relative;
   max-width: 1250px;
   padding: 10px 32px;
   margin: 0 auto;
