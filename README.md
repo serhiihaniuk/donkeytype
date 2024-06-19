@@ -1,6 +1,6 @@
 # DonkeyType - Typing Test App
 
-A fullctack typing test application inspired by [MonkeyType.com](https://monkeytype.com).
+A fullstack typing test application inspired by [MonkeyType.com](https://monkeytype.com).
 
 [Website](https://donkeytype.up.railway.app/)
 
