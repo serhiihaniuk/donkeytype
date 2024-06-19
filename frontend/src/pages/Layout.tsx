@@ -7,11 +7,15 @@ import styles from './Layhout.module.css'
 
 
 export default function Layout() {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  { /* @ts-expect-error */ }
   const [status] = useContext(StatusContext) 
   return (
     <div className={styles.app}>
       <Header />
-      <Outlet />
+      <div className={styles.content}>
+        <Outlet />
+      </div>
       {status === 'waiting' && <Footer />}
     </div>
   )

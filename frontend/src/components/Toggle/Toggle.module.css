@@ -1,0 +1,38 @@
+.toggleBtn{
+  all: unset;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  width: 40px;
+  height: 25px;
+  transition: background-color 0.1s ease;
+  cursor: pointer;
+  position: relative;
+}
+.toggleBtn.toggled:hover{
+    background-color: rgba(0, 320, 0, 0.9);
+}
+.toggleBtn:hover{
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.thumb{
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  transform: translateX(0);
+  transition: left 0.15s ease;
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.toggled{
+  background-color: rgba(0, 320, 0, 0.8);
+}
+.toggleBtn.toggled .thumb{
+  left: calc(35px - 18px)
+}
+
+
