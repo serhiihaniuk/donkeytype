@@ -1,4 +1,4 @@
-# DonkeyType = Typing Test App
+# DonkeyType - Typing Test App
 
 A fullctack typing test application inspired by [MonkeyType.com](https://monkeytype.com).
 
