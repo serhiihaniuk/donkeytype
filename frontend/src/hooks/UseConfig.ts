@@ -9,7 +9,8 @@ const UseConfig = (key: string) => {
   const defaultConfig = {
     time: 15,
     capitalizing: false,
-    numbers: false
+    numbers: false,
+    liveWPM: false
   };
 
   const [config, setConfig] = useState<Config>(() => {

@@ -429,7 +429,7 @@ const TypeBox: React.FC<Props> = ({ wordsData, setResult }) => {
           {status === 'started' && (
             <div className={styles.liveStats}>
               <span>{config.time - timer}</span>
-              <span>{liveWPM}</span>
+              {config.liveWPM && <span>{liveWPM}</span>}
             </div>
           )}
 
