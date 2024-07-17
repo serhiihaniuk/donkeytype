@@ -11,8 +11,14 @@ export default function Login() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <RegisterForm />
-        <LoginForm />
+        <div>
+          <p className={styles.formTitle}>Register</p>
+          <RegisterForm />
+        </div>
+        <div>
+          <p className={styles.formTitle}>Login</p>
+          <LoginForm />
+        </div>
       </div>
     </div>
   );

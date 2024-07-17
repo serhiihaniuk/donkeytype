@@ -6,3 +6,7 @@
   justify-content: space-around;
   align-items: center;
 }
+.formTitle{
+  font-weight: 700;
+  margin-bottom: 12px;
+}
