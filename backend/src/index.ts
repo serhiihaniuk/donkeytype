@@ -32,10 +32,10 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/words', wordsRouter)
 app.use('/api/v1/results', resultsRouter)
 
-app.use(express.static(path.join(__dirname, '../../src/frontend/dist')));
+app.use(express.static(path.join(__dirname, './frontend/dist/index.html')));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../src/frontend/dist', 'index.html'));
+  res.sendFile(path.join(__dirname, './frontend/dist/index.html', 'index.html'));
 });
 
 // app.get('/api/v1/resource/protected', TokenService.checkAccess, (_, res) => {

@@ -9,7 +9,7 @@ type Props = {
 
 export default function TypeConfig({ isVisible }: Props) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  /* @ts-expect-error */
+
   const [config, updateConfig] = useContext(
     ConfigContext
   ) as ConfigContextType | null;
