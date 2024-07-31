@@ -1,11 +1,11 @@
 // @ts-nocheck
-import express, { Express, Response } from 'express';
-import dotenv from 'dotenv';
-import Fingerprint from 'express-fingerprint';
-import { authRouter, resultsRouter, wordsRouter } from './router';
-import cookieParser from 'cookie-parser';
-import path from 'path';
-import cors from 'cors';
+import express, { Express, Response } from "express";
+import dotenv from "dotenv";
+import Fingerprint from "express-fingerprint";
+import { authRouter, resultsRouter, wordsRouter } from "./router";
+import cookieParser from "cookie-parser";
+import path from "path";
+import cors from "cors";
 
 dotenv.config();
 
@@ -13,8 +13,8 @@ const app: Express = express();
 const port = process.env.PORT || 3000;
 
 const corsOptions = {
-  origin: 'http://localhost:5173',
-  credentials: true 
+  origin: "http://localhost:5173",
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -28,14 +28,16 @@ app.use(
   })
 );
 
-app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/words', wordsRouter)
-app.use('/api/v1/results', resultsRouter)
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/words", wordsRouter);
+app.use("/api/v1/results", resultsRouter);
 
-app.use(express.static(path.join(__dirname, './frontend/dist/index.html')));
+app.use(express.static(path.join(__dirname, "../../frontend/dist/index.html")));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, './frontend/dist/index.html', 'index.html'));
+app.get("*", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../../frontend/dist/index.html", "index.html")
+  );
 });
 
 // app.get('/api/v1/resource/protected', TokenService.checkAccess, (_, res) => {
