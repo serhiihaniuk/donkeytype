@@ -1,0 +1,36 @@
+FROM node:20
+
+# Set working directory
+WORKDIR /app
+
+# Copy frontend and backend directories
+COPY frontend frontend/
+COPY backend backend/
+
+# Build frontend
+WORKDIR /app/frontend
+RUN npm install
+RUN npm run build
+
+# Build backend
+WORKDIR /app/backend
+RUN npm install
+RUN npm run build
+
+# Create a directory for the final app
+RUN mkdir -p /app/dist
+
+# Copy frontend build to the final dist/public folder
+RUN cp -r /app/frontend/dist/* /app/dist/public
+
+# Copy backend build to the final dist folder
+RUN cp -r /app/backend/dist/* /app/dist/
+
+# Set working directory to the final dist folder
+WORKDIR /app/dist
+
+# Expose the port your app runs on (adjust if needed)
+EXPOSE 3000
+
+# Start the Express.js app (adjust the start command if needed)
+CMD ["node", "index.js"]

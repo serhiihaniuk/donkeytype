@@ -2,7 +2,7 @@
 import express, { Express, Response } from "express";
 import dotenv from "dotenv";
 import Fingerprint from "express-fingerprint";
-import { authRouter, resultsRouter, wordsRouter } from "./router";
+import { authRouter, resultsRouter, wordsRouter } from "./src/router";
 import cookieParser from "cookie-parser";
 import path from "path";
 import cors from "cors";
@@ -31,12 +31,20 @@ app.use(
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/words", wordsRouter);
 app.use("/api/v1/results", resultsRouter);
+
+app.use((req, res, next) => {
+  if (req.url.endsWith(".js")) {
+    res.type("application/javascript");
+  }
+  next();
+});
+
 /* abc */
 
-app.use(express.static(path.join(__dirname, "./public/index.html")));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "./public/index.html", "index.html"));
+  res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 
 // app.get('/api/v1/resource/protected', TokenService.checkAccess, (_, res) => {
